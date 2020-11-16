@@ -2,7 +2,7 @@
 server <- function(input, output) {
   
   datasetInput <- reactive({
-    source("OC_calc_shiny.R", local = TRUE)
+    source("oc_calc_shiny.R", local = TRUE)
     return(list(df.amount=df.amount)) 
   })
   
@@ -29,14 +29,10 @@ server <- function(input, output) {
 library(shinythemes)
 
 ui <- shinyUI(fluidPage(
-  #img(src = "oc-calc-logo.png", height = 72, width = 72),
-  # HTML('<img src="oc-calc-logo.png", height="72px"    
-  #         style="float:right"/>','<p style="color:black"></p>'),
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
+  ),
   setBackgroundColor("#ecf0f5"),
-  titlePanel("OC-calc for Swiss_3S protocol"),
-  # App subtitle
-  h4(HTML("Upload the Swiss_3S protocol txt raw file(s) and click 'Calculate & Download'")),
-  #h5(HTML("You will get a file containing the amount of S1, S2, and S3 as well as the total amount of Swiss3S (TC)")),
   sidebarLayout(
     sidebarPanel(
       # Input: Select a file ----

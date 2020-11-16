@@ -30,11 +30,7 @@ library(shinythemes)
 
 ui <- shinyUI(fluidPage(
   setBackgroundColor("#ecf0f5"),
-  titlePanel("TC-calc"),
-  # App subtitle
-  h4(HTML("Upload the TC protocol txt raw file(s) and click 'Calculate & Download'")),
-  #h5(HTML("You will get a csv file...")),
-  sidebarLayout(
+ sidebarLayout(
     sidebarPanel(
       # Input: Select a file ----
       fileInput("fileUploaded", "Drag & Drop File(s)",

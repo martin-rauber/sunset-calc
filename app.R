@@ -2,53 +2,36 @@ library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
 
-ui <- dashboardPage(
+ui <- dashboardPage(skin="blue",
   dashboardHeader(title = "Sunset calc"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("TC calc", tabName = "first_app"),
-      menuItem("OC calc", tabName = "second_app")
-      # menuItem("TC calc", tabName = "third_app"),
-      # menuItem("Help", tabName = "Help"),
-      # menuItem("About", tabName = "About")
+      menuItem("OC calc", tabName = "second_app"),
+      menuItem("Readme", tabName = "Readme")
     )
   ),
   dashboardBody(
     tabItems(
       tabItem(tabName = "first_app",
+              h2("TC calc"),
+              p("Upload the TC protocol .txt raw file(s) and click 'Calculate & Download'"),
               source("tc_app.R", local = TRUE)$value
       ),
       tabItem(tabName = "second_app",
+              h2("OC calc"),
+              p("Upload the Swiss_3S protocol txt raw file(s) and click 'Calculate & Download'"),
               source("oc_app.R", local = TRUE)$value
+      ),
+      tabItem(tabName = "Readme",
+              includeMarkdown("readme.md")
       )
-      # tabItem(tabName = "Help",
-      #         h2("Help"),
-      #         p("how to use this app")
-      # ),
-      # tabItem(tabName = "About",
-      #         h2("About"),
-      #         p("created by Martin Rauber"),
-      #         tags$a(href="https://martin-rauber.com", "martin-rauber.com")
-      # )
     )
   )
 )
 
 server <- function(input,output,session){
-
-  output$menu <- renderMenu({
-    sidebarMenu(
-      menuItem("TC calc", tabName = "first_app"),
-      menuItem("OC calc", tabName = "second_app")
-    )
-  })
-  isolate({updateTabItems(session, "first_app", "second_app")})
 }
 shinyApp(ui,server)
-
-# #### tests
-# library(diffr)
-# diffr("oc_app.R", "tc_app.R")
-# diffr("OC_calc_shiny.R", "tc_calc_shiny.R")
 
 
