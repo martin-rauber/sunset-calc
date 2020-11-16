@@ -1,7 +1,7 @@
 # Readme
 
 ### Overview
-The sunset-calc program is a [R shiny app](https://shiny.rstudio.com) to calculate the amount of carbon for TC and Swiss_3S protocols. Be aware that this app only works with the designated Sunset protocols.
+The sunset-calc program is a [R shiny app](https://shiny.rstudio.com) to calculate the amount of carbon for TC and Swiss_3S protocols. Be aware that this app only works with the designated Sunset protocols. You can upload one or multiple files, however, **each file must contain only one Sunset run**. Expected filesize for TC files are ~48 KB and ~140 KB for OC (Swiss_3S) files.
 
 ### TC calc
 
