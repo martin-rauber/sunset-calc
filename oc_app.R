@@ -7,11 +7,11 @@ server <- function(input, output) {
   })
   
   output$downloadData <- downloadHandler(
-    filename = 'amount_calculation_result.zip',
+    filename = 'OC_amount_calculation_result.zip',
     content = function(fname) {
       
-      fs <- c("amount_calculation_result.csv")
-      write.csv(datasetInput()$df.amount, file = "amount_calculation_result.csv")
+      fs <- c("OC_amount_calculation_result.csv")
+      write.csv(datasetInput()$df.amount, file = "OC_amount_calculation_result.csv")
       print (fs)
       
       zip(zipfile=fname, files=fs)
@@ -33,10 +33,10 @@ ui <- shinyUI(fluidPage(
   # HTML('<img src="oc-calc-logo.png", height="72px"    
   #         style="float:right"/>','<p style="color:black"></p>'),
   setBackgroundColor("#ecf0f5"),
-  titlePanel("Sunset integration for the Swiss3S protocol"),
+  titlePanel("OC-calc for Swiss_3S protocol"),
   # App subtitle
-  h4(HTML("Upload the Sunset txt raw file(s) and click 'Calculate & Download'")),
-  h5(HTML("You will get a file containing the amount of S1, S2, and S3 as well as the total amount of Swiss3S (TC)")),
+  h4(HTML("Upload the Swiss_3S protocol txt raw file(s) and click 'Calculate & Download'")),
+  #h5(HTML("You will get a file containing the amount of S1, S2, and S3 as well as the total amount of Swiss3S (TC)")),
   sidebarLayout(
     sidebarPanel(
       # Input: Select a file ----

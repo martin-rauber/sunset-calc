@@ -79,14 +79,14 @@ data.load.func = function(filename) {
 #load data, run calculation --------------------------------------------------------
 
 filename <- input$fileUploaded$datapath
-df.amount <- NULL
+df.amount.tc <- NULL
 for (i in filename){
   data.load.func(i)
-  df.amount <- rbind(df.amount, data.frame(total_area$value, CH4_area$value,peak.amount.tc.raw, peak.amount.tc.ch4corr))
+  df.amount.tc <- rbind(df.amount.tc, data.frame(total_area$value, CH4_area$value,peak.amount.tc.raw, peak.amount.tc.ch4corr))
 }
 
-colnames(df.amount) <- c("TC area","CH4 area","TC uncorrected (µg C)","TC (µg C)")
-df.amount
+colnames(df.amount.tc) <- c("TC area","CH4 area","TC uncorrected (µg C)","TC (µg C)")
+df.amount.tc
 
 ###########################################################################
 #end

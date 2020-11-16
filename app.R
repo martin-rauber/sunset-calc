@@ -6,8 +6,8 @@ ui <- dashboardPage(
   dashboardHeader(title = "Sunset calc"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("OC calc", tabName = "first_app"),
-      menuItem("TC calc", tabName = "second_app"),
+      menuItem("TC calc", tabName = "first_app"),
+      menuItem("OC calc", tabName = "second_app"),
       menuItem("Help", tabName = "Help"),
       menuItem("About", tabName = "About")
     )
@@ -15,10 +15,10 @@ ui <- dashboardPage(
   dashboardBody(
     tabItems(
       tabItem(tabName = "first_app",
-              source("oc_app.R", local = TRUE)$value
+              source("tc_app.R", local = TRUE)$value
       ),
       tabItem(tabName = "second_app",
-              source("tc_app.R", local = TRUE)$value
+              source("oc_app.R", local = TRUE)$value
       ),
       tabItem(tabName = "Help",
               h2("Help"),

@@ -7,11 +7,11 @@ server <- function(input, output) {
   })
   
   output$downloadData <- downloadHandler(
-    filename = 'amount_calculation_result.zip',
+    filename = 'TC_amount_calculation_result.zip',
     content = function(fname) {
       
-      fs <- c("amount_calculation_result.csv")
-      write.csv(datasetInput()$df.amount, file = "amount_calculation_result.csv")
+      fs <- c("TC_amount_calculation_result.csv")
+      write.csv(datasetInput()$df.amount, file = "TC_amount_calculation_result.csv")
       print (fs)
       
       zip(zipfile=fname, files=fs)
@@ -30,10 +30,10 @@ library(shinythemes)
 
 ui <- shinyUI(fluidPage(
   setBackgroundColor("#ecf0f5"),
-  titlePanel("LARA Sunset integration for the TC protocol"),
+  titlePanel("TC-calc"),
   # App subtitle
-  h4(HTML("Upload the Sunset txt raw file(s) and click 'Calculate & Download'")),
-  h5(HTML("You will get a csv file...")),
+  h4(HTML("Upload the TC protocol txt raw file(s) and click 'Calculate & Download'")),
+  #h5(HTML("You will get a csv file...")),
   sidebarLayout(
     sidebarPanel(
       # Input: Select a file ----
