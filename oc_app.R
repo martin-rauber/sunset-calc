@@ -1,7 +1,7 @@
 # server.R
 server <- function(input, output) {
   
-  datasetInput <<- reactive({
+  datasetInput <- reactive({
     source("OC_calc_shiny.R", local = TRUE)
     return(list(df.amount=df.amount)) 
   })
@@ -60,3 +60,4 @@ ui <- shinyUI(fluidPage(
 )
 
 shinyApp(ui = ui, server = server)
+
