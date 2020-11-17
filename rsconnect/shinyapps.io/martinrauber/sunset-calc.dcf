@@ -5,9 +5,9 @@ account: martinrauber
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3243889
-bundleId: 3867897
+bundleId: 3867992
 url: https://martinrauber.shinyapps.io/sunset-calc/
-when: 1605550598.04621
+when: 1605552206.58543
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: .RData|sunset-calc-performance.xlsx|tc_calc_shiny_old.R
+ignoredFiles: .RData|sunset-calc-performance.xlsx

@@ -1,0 +1,1 @@
+Rscript -e 'library(methods); shiny::runApp("/Users/martinrauber/OneDrive/Uni Bern/EC-yield_and_charring_calculation_R/R skript development/sunset-calc/", launch.browser = TRUE, quiet = TRUE)' 
