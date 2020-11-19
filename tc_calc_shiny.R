@@ -22,7 +22,6 @@ currentCalConstant <<- (mean(NDIR_calib$CH4.area)-coef[1,])/coef[2,]
 #--------------------------define function-------------------------------
 
 data.load.func = function(filename) {
-  #filename = "mr01-169-e_20200728_oc_removal.txt"
   df <-  as.data.frame(read.csv(file = filename, sep = ",", skip = 28, header = T ))
   df$time_s <- seq(1:length(df$CO2_ppm))
   df <-df[,c(21,16)]
@@ -38,14 +37,13 @@ data.load.func = function(filename) {
   model<-loess(y~x, span=0.05, data=df)
   mod.fun<-function(x) predict(model,newdata=x)
   
-  #Corrections
-  #CH4
+  #CH4 corrections
   CH4_area <- integrate(mod.fun,280,380)
   
   #calibration peak correction factor with CH4
-  calibration_peak_correction_factor <- 57355.30357/CH4_area$value 
+  calibration_peak_correction_factor <- mean(NDIR_calib$CH4.area)/CH4_area$value 
   
-  # #Calculate area for each peak and total
+  #Calculate area for each peak and total
   #total carbon
   total_area <- integrate(mod.fun,50,250)
   total_area <- total_area$value*calibration_peak_correction_factor

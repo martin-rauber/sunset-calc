@@ -17,20 +17,120 @@ If you compare the OC calc result to a result calculated by another software, be
 
 OC calc can only handle unmodified Swiss_3S protocols. This means with a time shortened version (e.g. in S3) the calculation will fail.
 
-### How does it work
+### How does it work?
 
-The *Sunset calc* app is made with [shinydashboard](https://rstudio.github.io/shinydashboard/), which contains the two very similar fully self functioning apps *TC calc* and *OC calc* linked in the sidebar. Additionally, there is this *readme.md* markdown file you are reading right now for information. The plots immediately shown after file upload are generated independently from the calculation in the app, the calculation takes place in a linked R script and is triggered by pressing the 'Calculate & Download' button. After calculation, the result data frame is handled back to the shiny app, which creates a csv file and wraps this into a zip file for download.<br>
+The *Sunset calc* app is made with [shinydashboard](https://rstudio.github.io/shinydashboard/), which contains the two very similar but fully self functioning apps *TC calc* and *OC calc* linked in the sidebar. Additionally, there is this *readme* markdown file you are reading right now for information. The plots immediately shown after file upload are generated independently from the calculation in the app, the calculation takes place in a linked R script and is triggered by pressing the 'Calculate & Download' button. After calculation, the result data frame is handled back to the shiny app, which creates a csv file and wraps this into a zip file for download.
 
-here is some more text
+#### Calculation
+
+##### **Calibration coefficients and calibration constant**
+
+First, the coefficients from NDIR calibration are calculated. The amount reflects the known amount of analyte (sucrose solution) added, the area is the calculated area with the code below. The csv file is imported is assigned  the variable `NDIR_calib`. A linear regression model using the lm() function is made and the coefficients stored to the variable `coef`. Using the coefficients, the `currentCalConstant` is calculated. This CalConstant is later used to for correction should the sample have used a different calibration constant (e.g. when measuring online with GIS/MICADAS). <br>
+```
+NDIR_calib <- read.csv("NDIR-integrals-20200224-offline.csv", header = T)
+calib <- lm(area~amount, data = NDIR_calib)
+coef <- as.data.frame(calib$coefficients)
+currentCalConstant <<- (mean(NDIR_calib$CH4.area)-coef[1,])/coef[2,]
+```
+##### **Calculation function**
+
+The uploaded Sunset raw file is imported to a data frame, a new column for time added and all unnecessary columns except `time_s` and `CO2_ppm` removed. 
+
+```
+df <-  as.data.frame(read.csv(file = filename, sep = ",", skip = 28, header = T ))
+df$time_s <- seq(1:length(df$CO2_ppm))
+df <-df[,c(21,16)]
+```
+A baseline correction with the 20 smallest values is then performed: 
+```
+df$CO2_ppm <- df$CO2_ppm-mean(sort(df$CO2_ppm,decreasing=F)[1:20])
+```
+The calibration constant (`CalConstant`) value is imported from the file and the calibration constant factor (`CalConstFactor`) calculated. The `CalConstant` in a file could be different due to a new calibration, an old file, or an online measurement. Online measurements are different due to a different back pressure to the NDIR. Pressure as well as temperature affect CO<sub>2</sub> measurements with NDIR ([Yasuda et al., 2012](https://doi.org/10.3390/s120303641)).
+
+```
+CalConstant <-  as.data.frame(read.csv(file = filename, sep = ",", skip = 18, header = F ))
+CalConstant <- as.numeric(CalConstant[1,1])
+CalConstFactor <- CalConstant/currentCalConstant
+```
+  
+The local regression model is made, the CH<sub>4</sub> area integrated and with that the `calibration_peak_correction_factor` calculated. Finally, the TC area is integrated and corrected with the calibration peak correction factor. Then, the amount in µg C is calculated using the calibration coefficients and corrected with the `CalConstFactor`.
+  
+``` 
+colnames(df) = c("x", "y")
+model<-loess(y~x, span=0.05, data=df)
+mod.fun<-function(x) predict(model,newdata=x)
+
+#CH4 correction
+CH4_area <- integrate(mod.fun,280,380)
+
+#calibration peak correction factor with CH4
+calibration_peak_correction_factor <- mean(NDIR_calib$CH4.area)/CH4_area$value 
+```
+The shown script is valid for both TC and OC calculation, only the following section is different:<br>
+**TC**
+```
+#Calculate area for each peak and total
+#total carbon
+total_area <- integrate(mod.fun,50,250)
+total_area <- total_area$value*calibration_peak_correction_factor
+amount.tc <- (total_area-coef[1,])/coef[2,]
+amount.tc <<- amount.tc*CalConstFactor
+```
+<br>
+**OC**
+```
+  #Calculate area for each peak and total
+  #OC S1
+  OC_areaS1 <- integrate(mod.fun,50,350)
+  OC_areaS1 <- OC_areaS1$value*calibration_peak_correction_factor
+  amount.S1 <- (OC_areaS1-coef[1,])/coef[2,]
+  amount.S1 <<- amount.S1*CalConstFactor
+  #OC S2
+  OC_areaS2 <- integrate(mod.fun,350,610)
+  OC_areaS2 <- OC_areaS2$value*calibration_peak_correction_factor
+  amount.S2 <- (OC_areaS2-coef[1,])/coef[2,]
+  amount.S2 <<- amount.S2*CalConstFactor
+  #OC S3
+  OC_areaS3 <- integrate(mod.fun,610,1050)
+  OC_areaS3 <- OC_areaS3$value*calibration_peak_correction_factor
+  amount.S3 <- (OC_areaS3-coef[1,])/coef[2,]
+  amount.S3 <<- amount.S3*CalConstFactor
+  #total carbon
+  total_area <- integrate(mod.fun,50,1050)
+  total_area <- total_area$value*calibration_peak_correction_factor
+  amount.tc <- (total_area-coef[1,])/coef[2,]
+  amount.tc <<- amount.tc*CalConstFactor
+```
+
+The calculation code from above was wrapped into a function:
+
+````
+data.load.func = function(filename) {
+#code from above here
+} 
+```
+This function is executed for each uploaded file:
+```
+filename <- input$fileUploaded$datapath
+df.amount <- NULL
+for (i in filename){
+  data.load.func(i)
+  df.amount <- rbind(df.amount, data.frame(amount.tc))
+}
+
+colnames(df.amount) <- c("TC (ug C)")
+df.amount
+```
+
+The resulting `df.amount` is handled back to the shiny app for output. 
 
 ### About Sunset calc
 
 #### Feature wish list
 
 - test whether a pressure dependent calculation needs to be implemented, especially for online files
-- show a table with results in the browser window
-- show the pressure and CO2 plot (and maybe more parameters such as temperature) in the browser window
 - handle modified (shortened) Swiss_3S protocols
+- a file splitter app to separate txt files with multiple Sunset runs in one
 
 #### Repository
 
@@ -39,14 +139,7 @@ The code for this app is currently in a private repository on
 
 #### Info
 
-This app was created by [Martin Rauber](https://martin-rauber.com) for LARA, the Laboratory for the Analysis of Radiocarbon with AMS at the University of Bern.
+This app was created by [Martin Rauber](https://martin-rauber.com) for LARA, the Laboratory for the Analysis of Radiocarbon with AMS at the University of Bern. Please get in touch for any bug fixes and suggestions!
 
-#### Markdown tests below
-
-some `code` here!
-
-SVG image below!
-
-![image info](./images/pressure-plot.svg "pressure plot")
 
 

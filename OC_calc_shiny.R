@@ -22,7 +22,6 @@ currentCalConstant <<- (mean(NDIR_calib$CH4.area)-coef[1,])/coef[2,]
 #--------------------------define function-------------------------------
 
 data.load.func = function(filename) {
-  #filename = "mr01-169-e_20200728_oc_removal.txt"
   df <-  as.data.frame(read.csv(file = filename, sep = ",", skip = 28, header = T ))
   df$time_s <- seq(1:length(df$CO2_ppm))
   df <-df[,c(21,16)]
@@ -37,17 +36,8 @@ data.load.func = function(filename) {
   colnames(df) = c("x", "y")
   model<-loess(y~x, span=0.05, data=df)
   mod.fun<-function(x) predict(model,newdata=x)
-  
-  # #plot model with ggplot
-  # theme_set(theme_classic(base_size = 11,base_family = "Helvetica"))
-  # ggplot(df, aes(x, y)) +
-  #   geom_point() +
-  #   ylab("A.U.") +
-  #   xlab("time (s)") +
-  #   geom_smooth(formula = y~x, method = "loess",span=0.05, se = FALSE)
 
-  #Corrections
-  #CH4
+  #CH4 corrections
   CH4_area <- integrate(mod.fun,1050,1190)
   
   #calibration peak correction factor with CH4
