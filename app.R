@@ -1,7 +1,11 @@
 library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
+library(tidyverse)
+#ggplot theme
+theme_set(theme_classic())
 
+###
 ui <- dashboardPage(skin="blue",
   dashboardHeader(title = "Sunset calc"),
   dashboardSidebar(
