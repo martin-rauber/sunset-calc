@@ -17,6 +17,12 @@ If you compare the OC calc result to a result calculated by another software, be
 
 OC calc can only handle unmodified Swiss_3S protocols. This means with a time shortened version (e.g. in S3) the calculation will fail.
 
+### How does it work
+
+The *Sunset calc* app is made with [shinydashboard](https://rstudio.github.io/shinydashboard/), which contains the two very similar fully self functioning apps *TC calc* and *OC calc* linked in the sidebar. Additionally, there is this *readme.md* markdown file you are reading right now for information. The plots immediately shown after file upload are generated independently from the calculation in the app, the calculation takes place in a linked R script and is triggered by pressing the 'Calculate & Download' button. After calculation, the result data frame is handled back to the shiny app, which creates a csv file and wraps this into a zip file for download.<br>
+
+here is some more text
+
 ### About Sunset calc
 
 #### Feature wish list
