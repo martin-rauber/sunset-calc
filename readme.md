@@ -1,7 +1,7 @@
 # Readme
 
 ### Overview
-The sunset-calc program is a [R shiny app](https://shiny.rstudio.com) to calculate the amount of carbon for TC and Swiss_3S protocols from raw files recorded using a commercial thermo-optical OC/EC analyzer (Model 5L, [Sunset Laboratory Inc.](https://www.sunlab.com), OR, United States). Be aware that this app only works with the designated Sunset protocols. You can upload one or multiple files, however, **each file must contain only one Sunset run**. Expected file size for TC files are ~48 KB and ~140 KB for OC (Swiss_3S) files.
+The sunset-calc program is a [R shiny app](https://shiny.rstudio.com) to calculate the amount of carbon for TC and Swiss_3S protocols from raw files recorded using a commercial thermo-optical OC/EC analyzer (Model 5L, [Sunset Laboratory Inc.](https://www.sunlab.com), OR, United States). Be aware that this app only works with the designated Sunset protocols. You can upload one or multiple files, however, **each file must contain only one Sunset run**. Expected file size for TC files are ~48 KB and ~140 KB for OC (Swiss_3S) files. If you have multiple runs in a single txt file, please use the 'file splitter' first. 
 
 ### TC calc
 
@@ -17,9 +17,13 @@ If you compare the OC calc result to a result calculated by another software, be
 
 OC calc can only handle unmodified Swiss_3S protocols. This means with a time shortened version (e.g. in S3) the calculation will fail.
 
+### File splitter
+
+The file splitter splits a Sunset txt raw file with multiple runs in one to multiple files with one run. The app is no-frills; upload the file and get a zip file with each run in a single txt file. Result txt file nomenclature: [sample number]-[file name]-[sample name]-split.txt 
+
 ### How does it work?
 
-The *Sunset calc* app is made with [shinydashboard](https://rstudio.github.io/shinydashboard/), which contains the two very similar but fully self functioning apps *TC calc* and *OC calc* linked in the sidebar. Additionally, there is this *readme* markdown file you are reading right now for information. The plots immediately shown after file upload are generated independently from the calculation in the app, the calculation takes place in a linked R script and is triggered by pressing the 'Calculate & Download' button. After calculation, the result data frame is handled back to the shiny app, which creates a csv file and wraps this into a zip file for download.
+The *Sunset calc* app is made with [shinydashboard](https://rstudio.github.io/shinydashboard/), which contains the two very similar but fully self functioning apps *TC calc* and *OC calc* linked in the sidebar. Additionally, there is a *file splitter* app in the sidebar and this *readme* markdown file you are reading right now for information. The plots immediately shown after file upload are generated independently from the calculation in the app, the calculation takes place in a linked R script and is triggered by pressing the 'Calculate & Download' button. After calculation, the result data frame is handled back to the shiny app, which creates a csv file and wraps this into a zip file for download.
 
 #### Calculation
 
@@ -79,27 +83,27 @@ amount.tc <<- amount.tc*CalConstFactor
 <br>
 **OC**
 ```
-  #Calculate area for each peak and total
-  #OC S1
-  OC_areaS1 <- integrate(mod.fun,50,350)
-  OC_areaS1 <- OC_areaS1$value*calibration_peak_correction_factor
-  amount.S1 <- (OC_areaS1-coef[1,])/coef[2,]
-  amount.S1 <<- amount.S1*CalConstFactor
-  #OC S2
-  OC_areaS2 <- integrate(mod.fun,350,610)
-  OC_areaS2 <- OC_areaS2$value*calibration_peak_correction_factor
-  amount.S2 <- (OC_areaS2-coef[1,])/coef[2,]
-  amount.S2 <<- amount.S2*CalConstFactor
-  #OC S3
-  OC_areaS3 <- integrate(mod.fun,610,1050)
-  OC_areaS3 <- OC_areaS3$value*calibration_peak_correction_factor
-  amount.S3 <- (OC_areaS3-coef[1,])/coef[2,]
-  amount.S3 <<- amount.S3*CalConstFactor
-  #total carbon
-  total_area <- integrate(mod.fun,50,1050)
-  total_area <- total_area$value*calibration_peak_correction_factor
-  amount.tc <- (total_area-coef[1,])/coef[2,]
-  amount.tc <<- amount.tc*CalConstFactor
+#Calculate area for each peak and total
+#OC S1
+OC_areaS1 <- integrate(mod.fun,50,350)
+OC_areaS1 <- OC_areaS1$value*calibration_peak_correction_factor
+amount.S1 <- (OC_areaS1-coef[1,])/coef[2,]
+amount.S1 <<- amount.S1*CalConstFactor
+#OC S2
+OC_areaS2 <- integrate(mod.fun,350,610)
+OC_areaS2 <- OC_areaS2$value*calibration_peak_correction_factor
+amount.S2 <- (OC_areaS2-coef[1,])/coef[2,]
+amount.S2 <<- amount.S2*CalConstFactor
+#OC S3
+OC_areaS3 <- integrate(mod.fun,610,1050)
+OC_areaS3 <- OC_areaS3$value*calibration_peak_correction_factor
+amount.S3 <- (OC_areaS3-coef[1,])/coef[2,]
+amount.S3 <<- amount.S3*CalConstFactor
+#total carbon
+total_area <- integrate(mod.fun,50,1050)
+total_area <- total_area$value*calibration_peak_correction_factor
+amount.tc <- (total_area-coef[1,])/coef[2,]
+amount.tc <<- amount.tc*CalConstFactor
 ```
 
 The calculation code from above was wrapped into a function:
@@ -124,18 +128,58 @@ df.amount
 
 The resulting `df.amount` is handled back to the shiny app for output. 
 
+#### File splitter
+
+The file splitter is very simple and consists of three sections: 
+
+##### **import**
+```
+#get the filename
+filename.long <- input$fileUploaded$name
+#shortened filename without txt extension
+filename.short <- str_sub(filename.long, end=-5)
+#get the file datapath
+filedatapath <- input$fileUploaded$datapath   
+#read file in df
+df.head <- (read_csv(file = filedatapath, skip = 28))[1,]
+#create colnames
+df.colnames <- colnames(df.head, do.NULL = TRUE, prefix = "col")
+#read the the file
+df <- read_csv(file = filedatapath, col_names =  df.colnames)
+#get the index of each row which contains the word "Sample"
+df.rowindex.newfile <- which(df$FID1=="Sample",arr.ind=T)
+# subset to get the sample name
+df.samplename <- df[(df.rowindex.newfile+1),1]
+#get row index of for the end of the file:
+df.rowindex.endfile <- c((df.rowindex.newfile[2:length(df.rowindex.newfile)])-1,length(df$FID1))
+```
+##### **split**
+```
+#split df and save as txt
+for (i in seq(1:length(df.rowindex.newfile))) {
+write.csv(df[df.rowindex.newfile[i]:df.rowindex.endfile[i],], row.names=FALSE, quote=FALSE, file = paste0(i,"-", filename.short,"-", df.samplename[i,],"-split",".txt"))
+      }
+```
+##### **output**
+```
+#create a list of txt files
+file.list <- paste(list.files(getwd(), pattern = "*-split*.txt"), sep = "")
+#make zip file
+zip(zipfile=fname, files=file.list)
+#remove the created files
+file.remove(file.list)
+```
+
 ### About Sunset calc
 
 #### Feature wish list
 
 - test whether a pressure dependent calculation needs to be implemented, especially for online files
 - handle modified (shortened) Swiss_3S protocols
-- a file splitter app to separate txt files with multiple Sunset runs in one
 
 #### Repository
 
-The code for this app is currently in a private repository on
-[Github](https://github.com/martin-rauber/sunset-calc).
+The source code is available on [Github](https://github.com/martin-rauber/sunset-calc).
 
 #### Info
 

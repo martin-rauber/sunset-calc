@@ -5,9 +5,9 @@ account: martinrauber
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3243889
-bundleId: 3879569
+bundleId: 3881486
 url: https://martinrauber.shinyapps.io/sunset-calc/
-when: 1605774922.94273
+when: 1605810370.18431
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: .RData|a-mr02-001_tcoffline-1.txt|sunset-calc-performance.xlsx|suset-calc.command|images/.DS_Store|readme/2020_05_14-thai-oc-removal-c21-b.txt|readme/20201006_UD20_DOC_1.txt|readme/20201006_UD20_DOC_3.txt|readme/readme-plots.R|sunset-calc logo/.DS_Store|sunset-calc logo/sunset-calc-logo.icns|sunset-calc logo/sunset-calc-logo.ico|sunset-calc logo/sunset-calc-logo.png|sunset-calc logo/sunset-calc-logo.psd
+ignoredFiles: .RData|a-mr02-001_tcoffline-1.txt|sunset-calc-performance.xlsx|suset-calc.command|images/.DS_Store|images/pressure-plot.svg|readme/2020_05_14-thai-oc-removal-c21-b.txt|readme/20201006_UD20_DOC_1.txt|readme/20201006_UD20_DOC_3.txt|readme/readme-plots.R|sunset-calc logo/.DS_Store|sunset-calc logo/sunset-calc-logo.icns|sunset-calc logo/sunset-calc-logo.ico|sunset-calc logo/sunset-calc-logo.png|sunset-calc logo/sunset-calc-logo.psd
