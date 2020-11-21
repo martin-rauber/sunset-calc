@@ -5,34 +5,34 @@ output:
 ---
 # Readme
 
-### Overview
+## Overview
 The sunset-calc program is a [R shiny app](https://shiny.rstudio.com) to calculate the amount of carbon for TC and Swiss_3S protocols from raw files recorded using a commercial thermo-optical OC/EC analyzer (Model 5L, [Sunset Laboratory Inc.](https://www.sunlab.com), OR, United States). Be aware that this app only works with the designated Sunset protocols. You can upload one or multiple files, however, **each file must contain only one Sunset run**. Expected file size for TC files are ~48 KB and ~140 KB for OC (Swiss_3S) files. If you have multiple runs in a single txt file, please use the 'file splitter' first. 
 
-### TC calc
+## TC calc
 
 Program to calculate TC for TC files. You get a .zip file containing a .csv file with the amount of carbon (µg C) for each step and the total carbon. 
 If you compare the OC calc result to a result calculated by another software, be aware of the filter area that you used.
 
-### OC calc
+## OC calc
 
 Program to calculate S1, S2, and S3 OC and total for Sunset OC-removal (Swiss_3S) files. See [Zhang et al., 2012](https://doi.org/10.5194/acp-12-10841-2012) for details. You get a .zip file containing a .csv file with the amount of carbon (µg C) for each step and the total carbon. 
 If you compare the OC calc result to a result calculated by another software, be aware of the filter area that you used.
 
-#### Known issues
+### Known issues
 
 OC calc can only handle unmodified Swiss_3S protocols. This means with a time shortened version (e.g. in S3) the calculation will fail.
 
-### File splitter
+## File splitter
 
 The file splitter splits a Sunset txt raw file with multiple runs in one to multiple files with one run. The app is no-frills; upload the file and get a zip file with each run in a single txt file. Result txt file nomenclature: [sample number]-[file name]-[sample name]-split.txt 
 
-### How does it work?
+## How does it work?
 
 The *Sunset calc* app is made with [shinydashboard](https://rstudio.github.io/shinydashboard/), which contains the two very similar but fully self functioning apps *TC calc* and *OC calc* linked in the sidebar. Additionally, there is a *file splitter* app in the sidebar and this *readme* markdown file you are reading right now for information. The plots immediately shown after file upload are generated independently from the calculation in the app, the calculation takes place in a linked R script and is triggered by pressing the 'Calculate & Download' button. After calculation, the result data frame is handled back to the shiny app, which creates a csv file and wraps this into a zip file for download.
 
-#### Calculation
+### Calculation
 
-##### **Calibration coefficients and calibration constant**
+#### Calibration coefficients and calibration constant
 
 First, the coefficients from NDIR calibration are calculated. The amount reflects the known amount of analyte (sucrose solution) added, the area is the calculated area with the code below. The csv file is imported is assigned  the variable `NDIR_calib`. A linear regression model using the lm() function is made and the coefficients stored to the variable `coef`. Using the coefficients, the `currentCalConstant` is calculated. This CalConstant is later used to for correction should the sample have used a different calibration constant (e.g. when measuring online with GIS/MICADAS). <br>
 ```
@@ -41,7 +41,7 @@ calib <- lm(area~amount, data = NDIR_calib)
 coef <- as.data.frame(calib$coefficients)
 currentCalConstant <<- (mean(NDIR_calib$CH4.area)-coef[1,])/coef[2,]
 ```
-##### **Calculation function**
+#### Calculation function
 
 The uploaded Sunset raw file is imported to a data frame, a new column for time added and all unnecessary columns except `time_s` and `CO2_ppm` removed. 
 
@@ -80,8 +80,7 @@ calibration_peak_correction_factor <- mean(NDIR_calib$CH4.area)/CH4_area$value
 ```
 The shown script is valid for both TC and OC calculation, only the following section is different:
 
-**TC**
-
+#### TC
 
 ```
 #Calculate area for each peak and total
@@ -92,7 +91,7 @@ amount.tc <- (total_area-coef[1,])/coef[2,]
 amount.tc <<- amount.tc*CalConstFactor
 ```
 
-**OC**
+#### OC
 
 ```
 #Calculate area for each peak and total
@@ -142,11 +141,11 @@ df.amount
 
 The resulting `df.amount` is handled back to the shiny app for output. 
 
-#### File splitter
+### File splitter
 
 The file splitter is very simple and consists of three sections: 
 
-##### **import**
+#### import
 
 ```
 #get the filename
@@ -169,7 +168,7 @@ df.samplename <- df[(df.rowindex.newfile+1),1]
 df.rowindex.endfile <- c((df.rowindex.newfile[2:length(df.rowindex.newfile)])-1,length(df$FID1))
 ```
 
-##### **split**
+#### split
 
 ```
 #split df and save as txt
@@ -178,7 +177,7 @@ write.csv(df[df.rowindex.newfile[i]:df.rowindex.endfile[i],], row.names=FALSE, q
       }
 ```
 
-##### **output**
+#### output
 
 ```
 #create a list of txt files
@@ -189,18 +188,18 @@ zip(zipfile=fname, files=file.list)
 file.remove(file.list)
 ```
 
-### About Sunset calc
+## About Sunset calc
 
-#### Feature wish list
+### Feature wish list
 
 - test whether a pressure dependent calculation needs to be implemented, especially for online files
 - handle modified (shortened) Swiss_3S protocols
 
-#### Repository
+### Repository
 
 The source code is available on [Github](https://github.com/martin-rauber/sunset-calc).
 
-#### Info
+### Info
 
 This app was created by [Martin Rauber](https://martin-rauber.com) for LARA, the Laboratory for the Analysis of Radiocarbon with AMS at the University of Bern. Please get in touch for any bug fixes and suggestions!
 
