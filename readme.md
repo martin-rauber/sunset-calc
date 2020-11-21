@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Readme
 
 ### Overview
@@ -45,10 +50,13 @@ df <-  as.data.frame(read.csv(file = filename, sep = ",", skip = 28, header = T 
 df$time_s <- seq(1:length(df$CO2_ppm))
 df <-df[,c(21,16)]
 ```
+
 A baseline correction with the 20 smallest values is then performed: 
+
 ```
 df$CO2_ppm <- df$CO2_ppm-mean(sort(df$CO2_ppm,decreasing=F)[1:20])
 ```
+
 The calibration constant (`CalConstant`) value is imported from the file and the calibration constant factor (`CalConstFactor`) calculated. The `CalConstant` in a file could be different due to a new calibration, an old file, or an online measurement. Online measurements are different due to a different back pressure to the NDIR. Pressure as well as temperature affect CO<sub>2</sub> measurements with NDIR ([Yasuda et al., 2012](https://doi.org/10.3390/s120303641)).
 
 ```
@@ -70,8 +78,11 @@ CH4_area <- integrate(mod.fun,280,380)
 #calibration peak correction factor with CH4
 calibration_peak_correction_factor <- mean(NDIR_calib$CH4.area)/CH4_area$value 
 ```
-The shown script is valid for both TC and OC calculation, only the following section is different:<br>
+The shown script is valid for both TC and OC calculation, only the following section is different:
+
 **TC**
+
+
 ```
 #Calculate area for each peak and total
 #total carbon
@@ -80,8 +91,9 @@ total_area <- total_area$value*calibration_peak_correction_factor
 amount.tc <- (total_area-coef[1,])/coef[2,]
 amount.tc <<- amount.tc*CalConstFactor
 ```
-<br>
+
 **OC**
+
 ```
 #Calculate area for each peak and total
 #OC S1
@@ -108,12 +120,14 @@ amount.tc <<- amount.tc*CalConstFactor
 
 The calculation code from above was wrapped into a function:
 
-````
+```
 data.load.func = function(filename) {
 #code from above here
 } 
 ```
+
 This function is executed for each uploaded file:
+
 ```
 filename <- input$fileUploaded$datapath
 df.amount <- NULL
@@ -133,6 +147,7 @@ The resulting `df.amount` is handled back to the shiny app for output.
 The file splitter is very simple and consists of three sections: 
 
 ##### **import**
+
 ```
 #get the filename
 filename.long <- input$fileUploaded$name
@@ -153,14 +168,18 @@ df.samplename <- df[(df.rowindex.newfile+1),1]
 #get row index of for the end of the file:
 df.rowindex.endfile <- c((df.rowindex.newfile[2:length(df.rowindex.newfile)])-1,length(df$FID1))
 ```
+
 ##### **split**
+
 ```
 #split df and save as txt
 for (i in seq(1:length(df.rowindex.newfile))) {
 write.csv(df[df.rowindex.newfile[i]:df.rowindex.endfile[i],], row.names=FALSE, quote=FALSE, file = paste0(i,"-", filename.short,"-", df.samplename[i,],"-split",".txt"))
       }
 ```
+
 ##### **output**
+
 ```
 #create a list of txt files
 file.list <- paste(list.files(getwd(), pattern = "*-split*.txt"), sep = "")
