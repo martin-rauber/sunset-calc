@@ -21,7 +21,7 @@ server <- function(input, output) {
       ggplot(df, aes(x = time_s, y = CO2_ppm,colour = file_name)) +
         #theme(legend.position = "none")+
         theme(legend.position="right", legend.box="horizontal", legend.margin=margin(),legend.title = element_blank())+
-        ylab("NDIR CO2 (ppm)") +
+        ylab(bquote(paste("NDIR CO"["2"]*" (ppm)")))+
         xlab("time (s)") +
         geom_point()
     })
@@ -29,8 +29,11 @@ server <- function(input, output) {
       ggplot(df, aes(x = time_s, y = pressure.psig,colour = file_name)) +
         #theme(legend.position = "none")+
         theme(legend.position="right", legend.box="horizontal", legend.margin=margin(),legend.title = element_blank())+
-        ylab("pressure (psi)") +
         xlab("time (s)") +
+        scale_y_continuous(
+          "pressure (psi)", 
+          sec.axis = sec_axis(~ . * 68.9476, name = "pressure (mbar)")
+        )+
         geom_point()
     })
     output$plots_temperature = renderPlot({
