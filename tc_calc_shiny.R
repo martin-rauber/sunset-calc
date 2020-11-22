@@ -54,13 +54,18 @@ data.load.func = function(filename) {
 #load data, run calculation ----------------------------------------------
 
 filename <- input$fileUploaded$datapath
+#file name for output
+filename.text <<- input$fileUploaded$name
+
 df.amount <- NULL
 for (i in filename){
   data.load.func(i)
   df.amount <- rbind(df.amount, data.frame(amount.tc))
 }
 
-colnames(df.amount) <- c("TC (ug C)")
+# combine file name with ouput data
+df.amount <- cbind(filename.text,df.amount)
+colnames(df.amount) <- c("sample name","TC (ug C)")
 df.amount
 
 ##########################################################################

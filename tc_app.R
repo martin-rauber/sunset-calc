@@ -50,7 +50,7 @@ server <- function(input, output) {
     content = function(fname) {
       
       fs <- c("TC_amount_calculation_result.csv")
-      write.csv(datasetInput()$df.amount, file = "TC_amount_calculation_result.csv")
+      write_csv(datasetInput()$df.amount, file = "TC_amount_calculation_result.csv")
       print (fs)
       
       zip(zipfile=fname, files=fs)

@@ -1,3 +1,9 @@
+library(shiny)
+library(shinyWidgets)
+library(tidyverse)
+#ggplot theme
+theme_set(theme_classic())
+
 # server.R
 server <- function(input, output) {
   
@@ -50,7 +56,7 @@ server <- function(input, output) {
     content = function(fname) {
       
       fs <- c("OC_amount_calculation_result.csv")
-      write.csv(datasetInput()$df.amount, file = "OC_amount_calculation_result.csv")
+      write_csv(datasetInput()$df.amount, file = "OC_amount_calculation_result.csv")
       print (fs)
       
       zip(zipfile=fname, files=fs)
@@ -81,7 +87,11 @@ ui <- shinyUI(fluidPage(
                            "text/comma-separated-values,text/plain",
                            ".csv")),
       
-      
+      # Text input for OC removal step length
+      textInput("inTextS1", "S1", value = 240),
+      textInput("inTextS2", "S2", value = 120),
+      textInput("inTextS3", "S3", value = 360),
+
       # Output: Download a file ----
       downloadButton("downloadData", "Calculate & Download"),
       
