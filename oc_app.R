@@ -29,6 +29,12 @@ server <- function(input, output) {
         theme(legend.position="right", legend.box="horizontal", legend.margin=margin(),legend.title = element_blank())+
         ylab(bquote(paste("NDIR CO"["2"]*" (ppm)")))+
         xlab("time (s)") +
+        annotate("rect", xmin = 50, xmax = S1_length, ymin = 0, ymax = max(df$CO2_ppm), fill = "red", color ="red", alpha = .05)+
+        annotate("rect", xmin = S1_length, xmax = S2_length, ymin = 0, ymax = max(df$CO2_ppm), fill = "green", color ="green", alpha = .05)+
+        annotate("rect", xmin = S2_length, xmax = S3_length, ymin = 0, ymax = max(df$CO2_ppm), fill = "blue", color ="blue", alpha = .05)+
+        annotate("text", x = 70, y = max(df$CO2_ppm)-120, label = "S1")+
+        annotate("text", x = S1_length+20, y = max(df$CO2_ppm)-120, label = "S2")+
+        annotate("text", x = S2_length+20, y = max(df$CO2_ppm)-120, label = "S3")+
         geom_point()
     })
     output$plots_pressure = renderPlot({
