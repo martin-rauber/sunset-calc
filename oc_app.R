@@ -23,6 +23,9 @@ server <- function(input, output) {
     df_lenght <-  length((as.data.frame(read.csv(file = data$datapath[1], sep = ",", skip = 28, header = T )))$CO2_ppm)
     df$time_s <- rep(seq(1:df_lenght),length(data$name))
     df$file_name <- rep(data$name,each=df_lenght)
+    S1_length <- (110+as.numeric(input$inTextS1))
+    S2_length <- (490+as.numeric(input$inTextS2))
+    S3_length <- (690+as.numeric(input$inTextS3))
     output$plots_ndir = renderPlot({
       ggplot(df, aes(x = time_s, y = CO2_ppm,colour = file_name)) +
         #theme(legend.position = "none")+
@@ -32,9 +35,9 @@ server <- function(input, output) {
         annotate("rect", xmin = 50, xmax = S1_length, ymin = 0, ymax = max(df$CO2_ppm), fill = "red", color ="red", alpha = .05)+
         annotate("rect", xmin = S1_length, xmax = S2_length, ymin = 0, ymax = max(df$CO2_ppm), fill = "green", color ="green", alpha = .05)+
         annotate("rect", xmin = S2_length, xmax = S3_length, ymin = 0, ymax = max(df$CO2_ppm), fill = "blue", color ="blue", alpha = .05)+
-        annotate("text", x = 70, y = max(df$CO2_ppm)-120, label = "S1")+
-        annotate("text", x = S1_length+20, y = max(df$CO2_ppm)-120, label = "S2")+
-        annotate("text", x = S2_length+20, y = max(df$CO2_ppm)-120, label = "S3")+
+        annotate("text", x = 70, y = max(df$CO2_ppm)-60, label = "S1")+
+        annotate("text", x = S1_length+20, y = max(df$CO2_ppm)-60, label = "S2")+
+        annotate("text", x = S2_length+20, y = max(df$CO2_ppm)-60, label = "S3")+
         geom_point()
     })
     output$plots_pressure = renderPlot({

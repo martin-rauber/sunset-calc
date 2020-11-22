@@ -234,7 +234,6 @@ The file splitter is very simple and consists of three sections:
 ### Feature wish list
 
 - test whether a pressure dependent calculation needs to be implemented, especially for online files
-- handle modified (shortened) Swiss_3S protocols
 
 ### Repository
 
@@ -242,7 +241,7 @@ The source code is available on [Github](https://github.com/martin-rauber/sunset
 
 ### Info
 
-This app was created by [Martin Rauber](https://martin-rauber.com) for LARA, the Laboratory for the Analysis of Radiocarbon with AMS at the University of Bern. It's available online on [shinyapps.io](http://martinrauber.shinyapps.io/sunset-calc/) with the specific LARA NDIR values. Please get in touch for any bug fixes and suggestions!
+This app was created by [Martin Rauber](https://martin-rauber.com) for LARA, the Laboratory for the Analysis of Radiocarbon with AMS at the University of Bern. It's available online on [shinyapps.io](http://martinrauber.shinyapps.io/sunset-calc/) with the specific LARA NDIR values for testing purposes. Please get in touch for any bug fixes and suggestions!
 
 
 
