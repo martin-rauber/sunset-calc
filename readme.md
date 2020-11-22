@@ -234,7 +234,6 @@ The file splitter is very simple and consists of three sections:
 ### Feature wish list
 
 - test whether a pressure dependent calculation needs to be implemented, especially for online files
-- handle modified (shortened) Swiss_3S protocols
 
 ### Repository
 
