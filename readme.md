@@ -14,10 +14,6 @@ Program to calculate S1, S2, and S3 OC and total for Sunset OC-removal (Swiss_3S
 You get a .zip file containing a .csv file with the amount of carbon (µg C) for each step and the total carbon as well as the name of the sample corresponding to the input file name. 
 If you compare the OC calc result to a result calculated by another software, be aware of the filter area that you used.
 
-### Known issues
-
-OC calc can only handle unmodified Swiss_3S protocols. This means with a time shortened version (e.g. in S3) the calculation will fail.
-
 ## File splitter
 
 The file splitter splits a Sunset txt raw file with multiple runs in one to multiple files with one run. The app is no-frills; upload the file and get a zip file with each run in a single txt file. Result txt file nomenclature: [sample number]-[file name]-[sample name]-split.txt 
