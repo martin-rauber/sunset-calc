@@ -70,7 +70,7 @@ ui <- shinyUI(fluidPage(
       
       
       # Output: Download a file ----
-      downloadButton("downloadData", "Calculate & Download"),
+      downloadButton("downloadData", "Split!"),
       
       # CSS style for the download button ----
       tags$style(type='text/css', "#downloadFile { width:100%; margin-top: 35px;}")),
