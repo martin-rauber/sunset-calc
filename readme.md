@@ -8,15 +8,21 @@ The sunset-calc program is a [R shiny app](https://shiny.rstudio.com) to calcula
 Program to calculate TC for TC files. You get a .zip file containing a .csv file with the amount of carbon (µg C) for each step and the total carbon as well as the name of the sample corresponding to the input file name. 
 If you compare the OC calc result to a result calculated by another software, be aware of the filter area that you used.
 
+![TC calc demo](./demo/tc-calc-demo.gif)
+
 ## OC calc
 
 Program to calculate S1, S2, and S3 OC and total for Sunset OC-removal (Swiss_3S) files. See [Zhang et al., 2012](https://doi.org/10.5194/acp-12-10841-2012) for details. If you use a modified protocol, you need to adjust the set time in seconds for each modified step. Please do not adjust the times if you don't know what you are doing. When you reload the app, the times will go back to the default value, which corresponds to the standard Swiss_3S.
 You get a .zip file containing a .csv file with the amount of carbon (µg C) for each step and the total carbon as well as the name of the sample corresponding to the input file name. 
 If you compare the OC calc result to a result calculated by another software, be aware of the filter area that you used.
 
+![OC calc demo](./demo/oc-calc-demo.gif)
+
 ## File splitter
 
 The file splitter splits a Sunset txt raw file with multiple runs in one to multiple files with one run. The app is no-frills; upload the file and get a zip file with each run in a single txt file. Result txt file nomenclature: [sample number]-[file name]-[sample name]-split.txt 
+
+![File splitter demo](./demo/file-splitter-demo.gif)
 
 ## How does it work?
 
