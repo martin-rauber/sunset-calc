@@ -7,7 +7,7 @@ theme_set(theme_classic())
 
 ###
 ui <- dashboardPage(skin="blue",
-    dashboardHeader(title = span(img(src = "sunset-calc-logo.png", height = 35), "Sunset calc")),
+    dashboardHeader(title = "Sunset calc"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("TC calc", tabName = "tc_calc"),
@@ -20,17 +20,17 @@ ui <- dashboardPage(skin="blue",
     tabItems(
       tabItem(tabName = "tc_calc",
               h2("TC calc"),
-              p("Upload the TC protocol .txt raw file(s) and click 'Calculate & Download'"),
+              p("Upload the TC protocol raw file(s) and click 'Calculate & Download'"),
               source("tc_app.R", local = TRUE)$value
       ),
       tabItem(tabName = "oc_calc",
               h2("OC calc"),
-              p("Upload the Swiss_3S protocol txt raw file(s) and click 'Calculate & Download'"),
+              p("Upload the Swiss_3S protocol raw file(s) and click 'Calculate & Download'"),
               source("oc_app.R", local = TRUE)$value
       ),
       tabItem(tabName = "file_splitter",
               h2("File splitter"),
-              p("Upload a Sunset txt raw file with multiple runs and click 'Calculate & Download' to split in single txt files"),
+              p("Upload a Sunset raw file with multiple runs and click 'Split!' to split into single txt files"),
               source("file_splitter_app.R", local = TRUE)$value
       ),
       tabItem(tabName = "Readme",
