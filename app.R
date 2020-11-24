@@ -7,7 +7,7 @@ theme_set(theme_classic())
 
 ###
 ui <- dashboardPage(skin="blue",
-  dashboardHeader(title = "Sunset calc"),
+    dashboardHeader(title = span(img(src = "sunset-calc-logo.png", height = 35), "Sunset calc")),
   dashboardSidebar(
     sidebarMenu(
       menuItem("TC calc", tabName = "tc_calc"),
