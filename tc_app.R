@@ -3,12 +3,12 @@ server <- function(input, output) {
   
   datasetInput <- reactive({
     source("tc_calc_shiny.R", local = TRUE)
-    return(list(df.amount=df.amount)) 
+    return(list(df.amount.tc=df.amount.tc)) 
   })
   
   #observe input for plot
   observe({
-    data = input$fileUploaded
+    data = input$fileUploadedTC
     if(is.null(data))
       return(NULL)
     
@@ -50,7 +50,7 @@ server <- function(input, output) {
     content = function(fname) {
       
       fs <- c("TC_amount_calculation_result.csv")
-      write_csv(datasetInput()$df.amount, file = "TC_amount_calculation_result.csv")
+      write_csv(datasetInput()$df.amount.tc, file = "TC_amount_calculation_result.csv")
       print (fs)
       
       zip(zipfile=fname, files=fs)
@@ -72,7 +72,7 @@ ui <- shinyUI(fluidPage(
  sidebarLayout(
     sidebarPanel(
       # Input: Select a file ----
-      fileInput("fileUploaded", "Drag & Drop File(s)",
+      fileInput("fileUploadedTC", "Drag & Drop File(s)",
                 multiple = TRUE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",

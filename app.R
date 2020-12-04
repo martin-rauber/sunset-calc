@@ -6,17 +6,22 @@ library(tidyverse)
 theme_set(theme_classic())
 
 ###
-ui <- dashboardPage(skin="blue",
+ui <- dashboardPage(skin="blue",  
     dashboardHeader(title = "Sunset calc"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("TC calc", tabName = "tc_calc"),
       menuItem("OC calc", tabName = "oc_calc"),
+      menuItem("Swiss 4S calc", tabName = "swiss4s_calc"),
+      menuItem("EUSAAR2 calc", tabName = "EUSAAR2_calc"),
+      menuItem("OC/EC yield", tabName = "OC_EC_yield"),
       menuItem("File splitter", tabName = "file_splitter"),
       menuItem("Readme", tabName = "Readme")
     )
   ),
+
   dashboardBody(
+    #tags$style(type = "text/css", ".tab {height: calc(100vh - 80px) !important;}"),
     tabItems(
       tabItem(tabName = "tc_calc",
               h2("TC calc"),
@@ -28,6 +33,21 @@ ui <- dashboardPage(skin="blue",
               p("Upload the Swiss_3S protocol raw file(s) and click 'Calculate & Download'"),
               source("oc_app.R", local = TRUE)$value
       ),
+      tabItem(tabName = "swiss4s_calc",
+              h2("Swiss 4S calc"),
+              p("Upload the Swiss_4S protocol raw file(s) and click 'Calculate & Download'"),
+              source("swiss4s_app.R", local = TRUE)$value
+      ),
+      tabItem(tabName = "EUSAAR2_calc",
+              h2("EUSAAR2 calc"),
+              p("Upload the EUSAAR2 protocol raw file(s) and click 'Calculate & Download'"),
+              source("EUSAAR2_app.R", local = TRUE)$value
+      ),
+      tabItem(tabName = "OC_EC_yield",
+              h2("OC/EC yield"),
+              p("Upload the OC Swiss3S and TC protocol raw file(s) and click 'Calculate & Download'"),
+              source("OC_EC_yield_app.R", local = TRUE)$value
+      ),
       tabItem(tabName = "file_splitter",
               h2("File splitter"),
               p("Upload a Sunset raw file with multiple runs and click 'Split!' to split into single txt files"),
@@ -35,12 +55,14 @@ ui <- dashboardPage(skin="blue",
       ),
       tabItem(tabName = "Readme",
               includeMarkdown("readme.md")
+              
       )
     )
   )
 )
 
 server <- function(input,output,session){
+  
 }
 shinyApp(ui,server)
 

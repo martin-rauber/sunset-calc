@@ -8,13 +8,13 @@ theme_set(theme_classic())
 server <- function(input, output) {
   
   datasetInput <- reactive({
-    source("oc_calc_shiny.R", local = TRUE)
-    return(list(df.amount.oc=df.amount.oc)) 
+    source("swiss4s_calc_shiny.R", local = TRUE)
+    return(list(df.amount=df.amount)) 
   })
   
   #observe input for plot
   observe({
-    data = input$fileUploadedOC
+    data = input$fileUploaded
     if(is.null(data))
       return(NULL)
     
@@ -26,6 +26,7 @@ server <- function(input, output) {
     S1_length <- (110+as.numeric(input$inTextS1))
     S2_length <- (490+as.numeric(input$inTextS2))
     S3_length <- (690+as.numeric(input$inTextS3))
+    S4_length <- (1050+as.numeric(input$inTextS4))
     output$plots_ndir = renderPlot({
       ggplot(df, aes(x = time_s, y = CO2_ppm,colour = file_name)) +
         #theme(legend.position = "none")+
@@ -35,9 +36,11 @@ server <- function(input, output) {
         annotate("rect", xmin = 50, xmax = S1_length, ymin = 0, ymax = max(df$CO2_ppm), fill = "red", color ="red", alpha = .05)+
         annotate("rect", xmin = S1_length, xmax = S2_length, ymin = 0, ymax = max(df$CO2_ppm), fill = "green", color ="green", alpha = .05)+
         annotate("rect", xmin = S2_length, xmax = S3_length, ymin = 0, ymax = max(df$CO2_ppm), fill = "blue", color ="blue", alpha = .05)+
+        annotate("rect", xmin = S3_length, xmax = S4_length, ymin = 0, ymax = max(df$CO2_ppm), fill = "yellow", color ="yellow", alpha = .05)+
         annotate("text", x = 70, y = max(df$CO2_ppm)-60, label = "S1")+
         annotate("text", x = S1_length+20, y = max(df$CO2_ppm)-60, label = "S2")+
         annotate("text", x = S2_length+20, y = max(df$CO2_ppm)-60, label = "S3")+
+        annotate("text", x = S3_length+20, y = max(df$CO2_ppm)-60, label = "S4")+
         geom_point()
     })
     output$plots_pressure = renderPlot({
@@ -61,11 +64,11 @@ server <- function(input, output) {
   })
   
   output$downloadData <- downloadHandler(
-    filename = 'OC_amount_calculation_result.zip',
+    filename = 'Swiss4S_amount_calculation_result.zip',
     content = function(fname) {
       
-      fs <- c("OC_amount_calculation_result.csv")
-      write_csv(datasetInput()$df.amount, file = "OC_amount_calculation_result.csv")
+      fs <- c("Swiss4S_amount_calculation_result.csv")
+      write_csv(datasetInput()$df.amount, file = "Swiss4S_amount_calculation_result.csv")
       print (fs)
       
       zip(zipfile=fname, files=fs)
@@ -84,13 +87,13 @@ library(shinythemes)
 
 ui <- shinyUI(fluidPage(
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
+   tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
   ),
   setBackgroundColor("#ecf0f5"),
   sidebarLayout(
     sidebarPanel(
       # Input: Select a file ----
-      fileInput("fileUploadedOC", "Drag & Drop File(s)",
+      fileInput("fileUploaded", "Drag & Drop File(s)",
                 multiple = TRUE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
@@ -100,6 +103,7 @@ ui <- shinyUI(fluidPage(
       textInput("inTextS1", "S1", value = 240),
       textInput("inTextS2", "S2", value = 120),
       textInput("inTextS3", "S3", value = 360),
+      textInput("inTextS4", "S4", value = 280),
 
       # Output: Download a file ----
       downloadButton("downloadData", "Calculate & Download"),
@@ -119,5 +123,5 @@ ui <- shinyUI(fluidPage(
 )
 )
 
-shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server) 
 
