@@ -38,7 +38,7 @@ The file splitter splits a Sunset txt raw file with multiple runs in one to mult
 
 ## Issues
 
-For 
+For OC calc and Swiss 4S calc, the sum of each step (S1,S2,…) is not equal to the total, which is made by integrating from  start to end. 
 
 ## How does it work?
 
