@@ -28,8 +28,8 @@ server <- function(input, output) {
       colnames(df.result) <-  c("sample name OC","sample name TC","EC yield","charring S1","charring S2","charring S3","S1 (ug C)","S2 (ug C)", "S3 (ug C)","total OC (ug C)","EC (ug C)", "TC calculated (ug C)", "corr. OC (ug C)", "corr. EC (ug C)")
       print(df.result)
 
-      fs <- c( "combined-result.csv","yield-calc_summary1.pdf","yield-calc_summary2.pdf")
-      write.csv(df.result, file = "combined-result.csv", row.names=FALSE)
+      fs <- c( "oc-ec-yield-result.csv","yield-calc_summary1.pdf","yield-calc_summary2.pdf")
+      write.csv(df.result, file = "oc-ec-yield-result.csv", row.names=FALSE)
       print (fs)
 
       zip(zipfile=fname, files=fs)

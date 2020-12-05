@@ -18,11 +18,27 @@ If you compare the OC calc result to a result calculated by another software, be
 
 ![OC calc demo](./demo/oc-calc-demo.gif)
 
+## Swiss 4S calc
+
+Program to calculate S1, S2, and S3 OC and total OC for Swiss_4S files, basically the same as the OC calc for Swiss_3S but adjusted for the additional protocol step.
+
+## EUSAAR2 calc
+ 
+Proposed program to calculate OC/EC EUSAAR2 files… under construction
+
+## OC/EC yield 
+
+Program to calculate the amount in S1, S2, S3, and total OC (Swiss_3S file) using the OC calc script. The amount of EC is calculated with the uploaded EC file using the TC calc script. Additionally, the EC yield and charring is calculated using the Swiss_3S file. The result from each calculation is then used to perform the EC-yield correction. 
+
 ## File splitter
 
 The file splitter splits a Sunset txt raw file with multiple runs in one to multiple files with one run. The app is no-frills; upload the file and get a zip file with each run in a single txt file. Result txt file nomenclature: [sample number]-[file name]-[sample name]-split.txt 
 
 ![File splitter demo](./demo/file-splitter-demo.gif)
+
+## Issues
+
+For 
 
 ## How does it work?
 
