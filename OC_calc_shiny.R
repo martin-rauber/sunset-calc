@@ -61,7 +61,7 @@ data.load.func = function(filename) {
   #total carbon
   total_area <- integrate(mod.fun,50,total.length-140)
   total_area <- total_area$value*calibration_peak_correction_factor
-  amount.tc <- (total_area-coef[1,])/coef[2,]
+  amount.tc <- (total_area-3*coef[1,])/coef[2,]
   amount.tc <<- amount.tc*CalConstFactor
 } 
 

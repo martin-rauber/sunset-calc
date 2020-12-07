@@ -19,7 +19,6 @@ server <- function(input, output) {
   output$downloadData <- downloadHandler(
     filename = 'OC_EC_yield_result.zip',
     content = function(fname) {
-      
       df.result <- cbind(datasetInput()$df.yield,datasetInput()$df.amount.oc,datasetInput()$df.amount.tc)
       df.result$TCcalculated <- df.result[,10]+df.result[,12]
       df.result$ECcorr <- df.result[,12]/df.result[,1]
@@ -41,8 +40,6 @@ server <- function(input, output) {
       #removal
       file.remove(file.list.rem.csv)
       file.remove(file.list.rem.pdf)
-
-
     },
     contentType = "application/zip"
   )

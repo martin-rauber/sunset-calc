@@ -46,7 +46,7 @@ data.load.func = function(filename) {
   #calibration peak correction factor with CH4
   calibration_peak_correction_factor <- mean(NDIR_calib$CH4.area)/CH4_area$value 
 
-  #Calculate area for each peak and total. Standard integration S1 50-350, S2 350-610, S3 610-1050, CH4 1050-1190
+  #Calculate area for each peak and total.
   #OC S1
   OC_areaS1 <- integrate(mod.fun,50,S1_length)
   OC_areaS1 <- OC_areaS1$value*calibration_peak_correction_factor
@@ -70,7 +70,7 @@ data.load.func = function(filename) {
   #total carbon
   total_area <- integrate(mod.fun,50,total.length-140,subdivisions=10000)
   total_area <- total_area$value*calibration_peak_correction_factor
-  amount.tc <- (total_area-coef[1,])/coef[2,]
+  amount.tc <- (total_area-4*coef[1,])/coef[2,]
   amount.tc <<- amount.tc*CalConstFactor
 } 
 

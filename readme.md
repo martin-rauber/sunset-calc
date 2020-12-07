@@ -1,7 +1,7 @@
 # Readme
 
 ## Overview
-The sunset-calc program is a [R shiny app](https://shiny.rstudio.com) to calculate the amount of carbon for TC and Swiss_3S protocols from raw files recorded using a commercial thermo-optical OC/EC analyzer (Model 5L, [Sunset Laboratory Inc.](https://www.sunlab.com), OR, United States). Be aware that this app only works with the designated Sunset protocols. You can upload one or multiple files, however, **each file must contain only one Sunset run**. Expected file size for TC files are ~48 KB and ~140 KB for OC (Swiss_3S) files. If you have multiple runs in a single txt file, please use the 'file splitter' first. 
+The sunset-calc program is a [R shiny app](https://shiny.rstudio.com) to calculate the amount of carbon for TC, Swiss_3S, and Swiss4S protocols from raw files recorded using a commercial thermo-optical OC/EC analyzer (Model 5L, [Sunset Laboratory Inc.](https://www.sunlab.com), OR, United States). Be aware that this app only works with the designated Sunset protocols and does not take the given filter area into account. You can upload one or multiple files, however, **each file must contain only one Sunset run**. Expected file size for TC files are ~48 KB and ~140 KB for OC (Swiss_3S) files. If you have multiple runs in a single txt file, please use the 'file splitter' first. 
 
 ## TC calc
 
@@ -20,15 +20,16 @@ If you compare the OC calc result to a result calculated by another software, be
 
 ## Swiss 4S calc
 
-Program to calculate S1, S2, and S3 OC and total OC for Swiss_4S files, basically the same as the OC calc for Swiss_3S but adjusted for the additional protocol step.
+Program to calculate S1, S2, S3, S4, and total for Swiss_4S files. The calculation is basically the same as the OC calc for Swiss_3S, however, it is adjusted for the additional (EC) step at the end. 
 
 ## EUSAAR2 calc
  
-Proposed program to calculate OC/EC EUSAAR2 files… under construction
+Proposed program to calculate OC/EC for files recorded using the EUSAAR2 protocol.
+This is under construction…
 
 ## OC/EC yield 
 
-Program to calculate the amount in S1, S2, S3, and total OC (Swiss_3S file) using the OC calc script. The amount of EC is calculated with the uploaded EC file using the TC calc script. Additionally, the EC yield and charring is calculated using the Swiss_3S file. The result from each calculation is then used to perform the EC-yield correction. 
+Program to calculate the amount in S1, S2, S3, and total OC (Swiss_3S file) using the OC calc script. The amount of EC is calculated with the uploaded EC file using the TC calc script. Additionally, the EC yield and charring is calculated using the Swiss_3S file. The result from each calculation is then used to perform the amount correction. 
 
 ## File splitter
 
@@ -36,13 +37,9 @@ The file splitter splits a Sunset txt raw file with multiple runs in one to mult
 
 ![File splitter demo](./demo/file-splitter-demo.gif)
 
-## Issues
-
-For OC calc and Swiss 4S calc, the sum of each step (S1,S2,…) is not equal to the total, which is made by integrating from  start to end. This issue is particularly relevant for small amounts. 
-
 ## How does it work?
 
-The *Sunset calc* app is made with [shinydashboard](https://rstudio.github.io/shinydashboard/), which contains the two very similar but fully self functioning apps *TC calc* and *OC calc* linked in the sidebar. Additionally, there is a *file splitter* app in the sidebar and this *readme* markdown file you are reading right now for information. The plots immediately shown after file upload are generated independently from the calculation in the app, the calculation takes place in a linked R script and is triggered by pressing the 'Calculate & Download' button. After calculation, the result data frame is handled back to the shiny app, which creates a csv file and wraps this into a zip file for download.
+The *Sunset calc* app is made with [shinydashboard](https://rstudio.github.io/shinydashboard/), which contains the two very similar but fully self functioning apps *TC calc*, *OC calc*, *Swiss 4S calc*, and *OC/EC yield* linked in the sidebar. Additionally, there is a *file splitter* app in the sidebar and this *readme* markdown file you are reading right now for information. The plots immediately shown after file upload are generated independently from the calculation in the app, the calculation takes place in a linked R script and is triggered by pressing the 'Calculate & Download' button. After calculation, the result data frame is handled back to the shiny app, which creates a csv file and wraps this into a zip file for download.
 
 ### Calculation
 
@@ -88,7 +85,7 @@ The local regression model is made, the CH<sub>4</sub> area integrated and with 
 
 ```
 
-The shown script is valid for both TC and OC calculation, only the following section is different:
+The shown script is valid for both TC, OC, and Swiss 4S calculation, only the following section is different:
 
 #### TC
 
@@ -139,7 +136,47 @@ The shown script is valid for both TC and OC calculation, only the following sec
   #total carbon
   total_area <- integrate(mod.fun,50,total.length-140)
   total_area <- total_area$value*calibration_peak_correction_factor
-  amount.tc <- (total_area-coef[1,])/coef[2,]
+  amount.tc <- (total_area-3*coef[1,])/coef[2,]
+  amount.tc <<- amount.tc*CalConstFactor
+```
+
+#### Swiss 4S
+
+```
+#total protocol length
+  total.length <- length(df$x)
+  
+  #CH4 corrections
+  CH4_area <- integrate(mod.fun,total.length-140,total.length)
+  
+  #calibration peak correction factor with CH4
+  calibration_peak_correction_factor <- mean(NDIR_calib$CH4.area)/CH4_area$value 
+
+  #Calculate area for each peak and total.
+  #OC S1
+  OC_areaS1 <- integrate(mod.fun,50,S1_length)
+  OC_areaS1 <- OC_areaS1$value*calibration_peak_correction_factor
+  amount.S1 <- (OC_areaS1-coef[1,])/coef[2,]
+  amount.S1 <<- amount.S1*CalConstFactor
+  #OC S2
+  OC_areaS2 <- integrate(mod.fun,S1_length,S2_length)
+  OC_areaS2 <- OC_areaS2$value*calibration_peak_correction_factor
+  amount.S2 <- (OC_areaS2-coef[1,])/coef[2,]
+  amount.S2 <<- amount.S2*CalConstFactor
+  #OC S3
+  OC_areaS3 <- integrate(mod.fun,S2_length,S3_length)
+  OC_areaS3 <- OC_areaS3$value*calibration_peak_correction_factor
+  amount.S3 <- (OC_areaS3-coef[1,])/coef[2,]
+  amount.S3 <<- amount.S3*CalConstFactor
+  #EC S4
+  EC_areaS4 <- integrate(mod.fun,S3_length,S4_length)
+  EC_areaS4 <- EC_areaS4$value*calibration_peak_correction_factor
+  amount.S4 <- (EC_areaS4-coef[1,])/coef[2,]
+  amount.S4 <<- amount.S4*CalConstFactor
+  #total carbon
+  total_area <- integrate(mod.fun,50,total.length-140,subdivisions=10000)
+  total_area <- total_area$value*calibration_peak_correction_factor
+  amount.tc <- (total_area-4*coef[1,])/coef[2,]
   amount.tc <<- amount.tc*CalConstFactor
 ```
 
@@ -247,19 +284,64 @@ The file splitter is very simple and consists of three sections:
   file.remove(file.list)
 ```
 
+### OC/EC yield
+
+The server side of the `oc_ec_yield_app.R` contains the following script:
+
+```
+    #run yields calc, oc-calc, and tc calc, then return the desired data
+    source("yields_calc_shiny.R", local = TRUE)
+    source("oc_calc_shiny.R", local = TRUE)
+    source("tc_calc_shiny.R", local = TRUE)
+    return(list(df.yield=df_raw, df.amount.oc=df.amount.oc, df.amount.tc=df.amount.tc))
+```
+
+As soon as the user presses the 'Calculate & Download' button, the uploaded OC data is run with the `yields_calc_shiny.R` and `oc_calc_shiny.R` script and the EC data is run in the `tc_calc_shiny.R` script. the return call gives the results from each  calculation. The results are stored in the new data frame `df.result`. Using this data frame, the corrected OC and EC amounts are calculated. `TCcalculated` is the sum of OC and EC, `ECcorr` is the EC yield corrected amount of EC, and `OCcorr` is the EC yield corrected amount of OC. Finally, the data frame is sorted and column names applied.
+
+```
+  output$downloadData <- downloadHandler(
+    filename = 'OC_EC_yield_result.zip',
+    content = function(fname) {
+      df.result <- cbind(datasetInput()$df.yield,datasetInput()$df.amount.oc,datasetInput()$df.amount.tc)
+      df.result$TCcalculated <- df.result[,10]+df.result[,12]
+      df.result$ECcorr <- df.result[,12]/df.result[,1]
+      df.result$OCcorr <- df.result[,10]-(df.result$ECcorr-df.result[,12])
+      df.result <- cbind(df.result[,6],df.result[,11],df.result[,1:4],df.result[,7:10],df.result[,12],df.result$TCcalculated,df.result$OCcorr,df.result$ECcorr)
+      colnames(df.result) <-  c("sample name OC","sample name TC","EC yield","charring S1","charring S2","charring S3","S1 (ug C)","S2 (ug C)", "S3 (ug C)","total OC (ug C)","EC (ug C)", "TC calculated (ug C)", "corr. OC (ug C)", "corr. EC (ug C)")
+      print(df.result)
+
+      fs <- c( "oc-ec-yield-result.csv","yield-calc_summary1.pdf","yield-calc_summary2.pdf")
+      write.csv(df.result, file = "oc-ec-yield-result.csv", row.names=FALSE)
+      print (fs)
+
+      zip(zipfile=fname, files=fs)
+
+      #remove temporary files form folder again
+      ##path csv and pdf
+      file.list.rem.csv <- paste(getwd(), "/",list.files(getwd(), pattern = "*result.csv"), sep = "")
+      file.list.rem.pdf <- paste(getwd(), "/",list.files(getwd(), pattern = "*.pdf"), sep = "")
+      #removal
+      file.remove(file.list.rem.csv)
+      file.remove(file.list.rem.pdf)
+    },
+    contentType = "application/zip"
+  )
+```
+
+The exported csv file contains the sample name for both the OC file as well as the EC file to avoid mistakes before EC yield and charring results as well as the raw and calculated amount of carbon for each fraction. Additional to the result csv file, two summary pdf files generated by the yield calculation are included in the zip download. 
+
 ## About Sunset calc
 
 ### Feature wish list
 
-- test whether a pressure dependent calculation needs to be implemented, especially for online files
-
-### Repository
-
-The source code is available on [Github](https://github.com/martin-rauber/sunset-calc).
+- A tab for EUSAAR2 protocols
+- TC and Swiss 3S: test, whether a pressure dependent calculation needs to be implemented, especially for online files
+- Include a standalone yield calc app 
 
 ### Info
 
-This app was created by [Martin Rauber](https://martin-rauber.com) for LARA, the Laboratory for the Analysis of Radiocarbon with AMS at the University of Bern. It's available online on [shinyapps.io](http://martinrauber.shinyapps.io/sunset-calc/) with the specific LARA NDIR values for testing purposes. Please get in touch for any bug fixes and suggestions!
+This app was created by [Martin Rauber](https://martin-rauber.com) for LARA, the Laboratory for the Analysis of Radiocarbon with AMS at the University of Bern. The yield calculation script was written by [Gary Salazar](mailto:gary.salazar@dcb.unibe.ch).
+Sunset calc is available online on [shinyapps.io](http://martinrauber.shinyapps.io/sunset-calc/) with the specific LARA NDIR values for testing purposes. Please get in touch for any bug fixes and suggestions!
 
 
 
