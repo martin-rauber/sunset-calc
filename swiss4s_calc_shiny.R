@@ -7,16 +7,14 @@
 library("tidyverse")
 library("zip")
 
-#clean up environment-----------------------------------------------------
-rm(list=setdiff(ls(), c()))
-if(!is.null(dev.list())) dev.off()
-
 #--------------------------calibration------------------------------------
 
-# calculation of coefficients from NDIR calibration
+# calculation of coefficients from NDIR calibration, intercept set to zero
 NDIR_calib <- read.csv("NDIR-integrals-20200224-offline.csv", header = T)
-calib <- lm(area~amount, data = NDIR_calib)
+intercept <- 0
+calib <- lm(I(area - intercept) ~ 0+ amount, data = NDIR_calib)
 coef <- as.data.frame(calib$coefficients)
+coef <- rbind(intercept, as.data.frame(calib$coefficients))
 currentCalConstant <<- (mean(NDIR_calib$CH4.area)-coef[1,])/coef[2,]
 
 #--------------------------define function-------------------------------

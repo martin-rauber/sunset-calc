@@ -45,12 +45,17 @@ The *Sunset calc* app is made with [shinydashboard](https://rstudio.github.io/sh
 
 #### Calibration coefficients and calibration constant
 
-First, the coefficients from NDIR calibration are calculated. The amount reflects the known amount of analyte (sucrose solution) added, the area is the calculated area with the code below. Please be aware that the values storred file are valid for the Sunset device at [LARA](https://www.14c.unibe.ch) and might be significantly different on an other device. The csv file is imported is assigned  the variable `NDIR_calib`. A linear regression model using the lm() function is made and the coefficients stored to the variable `coef`. Using the coefficients, the `currentCalConstant` is calculated. This CalConstant is later used to for correction should the sample have used a different calibration constant (e.g. when measuring online with GIS/MICADAS). <br>
+First, the coefficients from NDIR calibration are calculated. The amount reflects the known amount of analyte (sucrose solution) added, the area is the calculated area with the code below. Please be aware that the values storred file are valid for the Sunset device at [LARA](https://www.14c.unibe.ch) and might be significantly different on an other device. The csv file is imported is assigned  the variable `NDIR_calib`. A linear regression model using the lm() function is made and the coefficients stored to the variable `coef`. Using the coefficients, the `currentCalConstant` is calculated. This CalConstant is later used to for correction should the sample have used a different calibration constant (e.g. when measuring online with GIS/MICADAS). Initially, the calculated intercept was used, however, trials showed that the results match the Sunset Calc426 (program provided by Sunset for analysis) better when the intercept was set to zero.
+
 ```
-  NDIR_calib <- read.csv("NDIR-integrals-20200224-offline.csv", header = T)
-  calib <- lm(area~amount, data = NDIR_calib)
-  coef <- as.data.frame(calib$coefficients)
-  currentCalConstant <<- (mean(NDIR_calib$CH4.area)-coef[1,])/coef[2,]
+# calculation of coefficients from NDIR calibration, intercept set to zero
+NDIR_calib <- read.csv("NDIR-integrals-20200224-offline.csv", header = T)
+intercept <- 0
+calib <- lm(I(area - intercept) ~ 0+ amount, data = NDIR_calib)
+coef <- as.data.frame(calib$coefficients)
+coef <- rbind(intercept, as.data.frame(calib$coefficients))
+currentCalConstant <<- (mean(NDIR_calib$CH4.area)-coef[1,])/coef[2,]
+
 ```
 #### Calculation function
 
@@ -235,6 +240,33 @@ This function is executed for each uploaded file:
   df.amount
 ```
 
+#### Swiss 4S
+
+```
+#get file name
+filename <- input$fileUploaded$datapath
+#file name for output
+filename.text <<- input$fileUploaded$name
+#length of 
+S1_length <- (110+as.numeric(input$inTextS1))
+S2_length <- (490+as.numeric(input$inTextS2))
+S3_length <- (690+as.numeric(input$inTextS3))
+S4_length <- (1050+as.numeric(input$inTextS4))
+
+#create an empty df
+df.amount <- NULL
+#loop function
+for (i in filename){
+  data.load.func(i)
+  df.amount <- rbind(df.amount, data.frame(amount.S1, amount.S2, amount.S3,amount.S4,amount.tc))
+}
+
+# combine file name with ouput data
+df.amount <- cbind(filename.text,df.amount)
+colnames(df.amount) <- c("sample name","S1 (ug C)","S2 (ug C)","S3 (ug C)","S4 (ug C)", "total (ug C)")
+df.amount
+```
+
 The resulting `df.amount` is handled back to the shiny app for output. 
 
 ### File splitter
@@ -343,5 +375,8 @@ The exported csv file contains the sample name for both the OC file as well as t
 This app was created by [Martin Rauber](https://martin-rauber.com) for LARA, the Laboratory for the Analysis of Radiocarbon with AMS at the University of Bern. The yield calculation script was written by [Gary Salazar](mailto:gary.salazar@dcb.unibe.ch).
 Sunset calc is available online on [shinyapps.io](http://martinrauber.shinyapps.io/sunset-calc/) with the specific LARA NDIR values for testing purposes. Please get in touch for any bug fixes and suggestions!
 
+### License
+
+Sunset calc is released under the [MIT License](./LICENCE.txt).
 
 

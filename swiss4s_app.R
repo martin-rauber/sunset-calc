@@ -1,6 +1,7 @@
 library(shiny)
 library(shinyWidgets)
 library(tidyverse)
+library(zoo)
 #ggplot theme
 theme_set(theme_classic())
 
@@ -61,6 +62,13 @@ server <- function(input, output) {
         xlab("time (s)") +
         geom_point()
     })
+    output$plots_laser = renderPlot({
+      ggplot(df, aes(x = time_s, y = laserTrans,colour = file_name)) +
+        theme(legend.position="right", legend.box="horizontal", legend.margin=margin(), legend.title = element_blank())+
+        ylab("transmission (A.U.)") +
+        xlab("time (s)") +
+        geom_point()
+    })
   })
   
   output$downloadData <- downloadHandler(
@@ -116,7 +124,8 @@ ui <- shinyUI(fluidPage(
       tabsetPanel(type = "tabs",
                   tabPanel("NDIR", plotOutput('plots_ndir', width = "100%", height = "360px")),
                   tabPanel("Temperature", plotOutput('plots_temperature',width = "100%", height = "360px")),
-                  tabPanel("Pressure", plotOutput('plots_pressure',width = "100%", height = "360px"))
+                  tabPanel("Pressure", plotOutput('plots_pressure',width = "100%", height = "360px")),
+                  tabPanel("Laser", plotOutput('plots_laser',width = "100%", height = "360px"))
       )
     )
   )
