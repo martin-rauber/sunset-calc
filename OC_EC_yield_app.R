@@ -17,8 +17,8 @@ server <- function(input, output) {
   })
   
   output$downloadData <- downloadHandler(
-    filename = 'OC_EC_yield_result.zip',
-    content = function(fname) {
+    filename = 'oc-ec-yield-result.csv',
+    content = function(file) {
       df.result <- cbind(datasetInput()$df.yield,datasetInput()$df.amount.oc,datasetInput()$df.amount.tc)
       df.result$TCcalculated <- df.result[,10]+df.result[,12]
       df.result$ECcorr <- df.result[,12]/df.result[,1]
@@ -26,23 +26,15 @@ server <- function(input, output) {
       df.result <- cbind(df.result[,6],df.result[,11],df.result[,1:4],df.result[,7:10],df.result[,12],df.result$TCcalculated,df.result$OCcorr,df.result$ECcorr)
       colnames(df.result) <-  c("sample name OC","sample name TC","EC yield","charring S1","charring S2","charring S3","S1 (ug C)","S2 (ug C)", "S3 (ug C)","total OC (ug C)","EC (ug C)", "TC calculated (ug C)", "corr. OC (ug C)", "corr. EC (ug C)")
       print(df.result)
-
-      fs <- c( "oc-ec-yield-result.csv","yield-calc_summary1.pdf","yield-calc_summary2.pdf")
-      write.csv(df.result, file = "oc-ec-yield-result.csv", row.names=FALSE)
-      print (fs)
-
-      zip(zipfile=fname, files=fs)
-
+      write.csv(df.result, file, row.names=FALSE)
       #remove temporary files form folder again
       ##path csv and pdf
-      file.list.rem.csv <- paste(getwd(), "/",list.files(getwd(), pattern = "*result.csv"), sep = "")
       file.list.rem.pdf <- paste(getwd(), "/",list.files(getwd(), pattern = "*.pdf"), sep = "")
       #removal
-      file.remove(file.list.rem.csv)
       file.remove(file.list.rem.pdf)
-    },
-    contentType = "application/zip"
+    }
   )
+  
   
 }
 

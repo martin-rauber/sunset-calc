@@ -72,20 +72,10 @@ server <- function(input, output) {
   })
   
   output$downloadData <- downloadHandler(
-    filename = 'Swiss4S_amount_calculation_result.zip',
-    content = function(fname) {
-      
-      fs <- c("Swiss4S_amount_calculation_result.csv")
-      write_csv(datasetInput()$df.amount, file = "Swiss4S_amount_calculation_result.csv")
-      print (fs)
-      
-      zip(zipfile=fname, files=fs)
-      
-      file.list.rem <- paste(getwd(), "/",list.files(getwd(), pattern = "*result.csv"), sep = "")
-      file.remove(file.list.rem)
-      
-    },
-    contentType = "application/zip"
+    filename = 'Swiss4S_amount_calculation_result.csv',
+    content = function(file) {
+      write.csv(datasetInput()$df.amount, file, row.names=FALSE)
+    }
   )
   
 }

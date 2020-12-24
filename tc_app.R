@@ -46,20 +46,10 @@ server <- function(input, output) {
   })
   
   output$downloadData <- downloadHandler(
-    filename = 'TC_amount_calculation_result.zip',
-    content = function(fname) {
-      
-      fs <- c("TC_amount_calculation_result.csv")
-      write_csv(datasetInput()$df.amount.tc, file = "TC_amount_calculation_result.csv")
-      print (fs)
-      
-      zip(zipfile=fname, files=fs)
-      
-      file.list.rem <- paste(getwd(), "/",list.files(getwd(), pattern = "*result.csv"), sep = "")
-      file.remove(file.list.rem)
-      
-    },
-    contentType = "application/zip"
+    filename = 'TC_amount_calculation_result.csv',
+    content = function(file) {
+      write.csv(datasetInput()$df.amount, file, row.names=FALSE)
+    }
   )
   
 }

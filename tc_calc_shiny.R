@@ -23,8 +23,10 @@ data.load.func = function(filename) {
   df <-  as.data.frame(read.csv(file = filename, sep = ",", skip = 28, header = T ))
   df$time_s <- seq(1:length(df$CO2_ppm))
   df <-df[,c(21,16)]
-  #baseline correction with the 20 smallest values
-  df$CO2_ppm <- df$CO2_ppm-mean(sort(df$CO2_ppm,decreasing=F)[1:20])
+  #baseline correction
+  df$CO2_ppm <- df$CO2_ppm-median(sort(df$CO2_ppm,decreasing=F)[1:length(which(df$CO2_ppm < 0))])
+  #Baseline correction: set all remaining negative values to zero
+  df$CO2_ppm[df$CO2_ppm < 0] <- 0
   #import CalConstant and calculate the calibration constant factor
   CalConstant <-  as.data.frame(read.csv(file = filename, sep = ",", skip = 18, header = F ))
   CalConstant <- as.numeric(CalConstant[1,1])

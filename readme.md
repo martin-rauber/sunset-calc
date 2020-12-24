@@ -67,10 +67,11 @@ The uploaded Sunset raw file is imported to a data frame, a new column for time 
   df <-df[,c(21,16)]
 ```
 
-A baseline correction with the 20 smallest values is then performed: 
+A baseline correction is then performed: 
 
 ```
-  df$CO2_ppm <- df$CO2_ppm-mean(sort(df$CO2_ppm,decreasing=F)[1:20])
+  df$CO2_ppm <- df$CO2_ppm-median(sort(df$CO2_ppm,decreasing=F)[1:length(which(df$CO2_ppm < 0))])
+  df$CO2_ppm[df$CO2_ppm < 0] <- 0
 ```
 
 The calibration constant (`CalConstant`) value is imported from the file and the calibration constant factor (`CalConstFactor`) calculated. The `CalConstant` in a file could be different due to a new calibration, an old file, or an online measurement. Online measurements are different due to a different back pressure to the NDIR. Pressure as well as temperature affect CO<sub>2</sub> measurements with NDIR ([Yasuda et al., 2012](https://doi.org/10.3390/s120303641)).
@@ -372,7 +373,7 @@ The exported csv file contains the sample name for both the OC file as well as t
 
 ### Info
 
-This app was created by [Martin Rauber](https://martin-rauber.com) for LARA, the Laboratory for the Analysis of Radiocarbon with AMS at the University of Bern. The yield calculation script was written by [Gary Salazar](mailto:gary.salazar@dcb.unibe.ch).
+This app was created by [Martin Rauber](https://martin-rauber.com) for LARA, the Laboratory for the Analysis of Radiocarbon with AMS at the University of Bern. The EC yield calculation script is part of [COMPYCALC ](https://doi.org/10.5281/zenodo.4318834) and adapted from there.
 Sunset calc is available online on [shinyapps.io](http://martinrauber.shinyapps.io/sunset-calc/) with the specific LARA NDIR values for testing purposes. Please get in touch for any bug fixes and suggestions!
 
 ### License

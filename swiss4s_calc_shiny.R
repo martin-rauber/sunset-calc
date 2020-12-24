@@ -23,8 +23,10 @@ data.load.func = function(filename) {
   df <-  as.data.frame(read.csv(file = filename, sep = ",", skip = 28, header = T ))
   df$time_s <- seq(1:length(df$CO2_ppm))
   df <-df[,c(21,16)]
-  #baseline correction with the 20 smallest values
-  df$CO2_ppm <- df$CO2_ppm-mean(sort(df$CO2_ppm,decreasing=F)[1:20])
+  #baseline correction
+  df$CO2_ppm <- df$CO2_ppm-median(sort(df$CO2_ppm,decreasing=F)[1:length(which(df$CO2_ppm < 0))])
+  #Baseline correction: set all remaining negative values to zero
+  df$CO2_ppm[df$CO2_ppm < 0] <- 0
   #import CalConstant and calculate the calibration constant factor
   CalConstant <-  as.data.frame(read.csv(file = filename, sep = ",", skip = 18, header = F ))
   CalConstant <- as.numeric(CalConstant[1,1])
@@ -70,6 +72,7 @@ data.load.func = function(filename) {
   total_area <- total_area$value*calibration_peak_correction_factor
   amount.tc <- (total_area-4*coef[1,])/coef[2,]
   amount.tc <<- amount.tc*CalConstFactor
+  total.area <<- as.numeric(total_area)
 } 
 
 #load data, run calculation ----------------------------------------------
@@ -89,12 +92,12 @@ df.amount <- NULL
 #loop function
 for (i in filename){
   data.load.func(i)
-  df.amount <- rbind(df.amount, data.frame(amount.S1, amount.S2, amount.S3,amount.S4,amount.tc))
+  df.amount <- rbind(df.amount, data.frame(amount.S1, amount.S2, amount.S3,amount.S4,total.area,amount.tc))
 }
 
 # combine file name with ouput data
 df.amount <- cbind(filename.text,df.amount)
-colnames(df.amount) <- c("sample name","S1 (ug C)","S2 (ug C)","S3 (ug C)","S4 (ug C)", "total (ug C)")
+colnames(df.amount) <- c("sample name","S1 (ug C)","S2 (ug C)","S3 (ug C)","S4 (ug C)","total area", "total (ug C)")
 df.amount
 
 
