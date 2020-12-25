@@ -12,10 +12,10 @@ server <- function(input, output) {
     content = function(fname) {
       
       fs <- c("raw-result.csv", "clean-result.csv", "stat-result.csv", "mean-result.csv","yield-calc_summary1.pdf","yield-calc_summary2.pdf")
-      write.csv(datasetInput()$df1, file = "raw-result.csv")
-      write.csv(datasetInput()$df2, file = "clean-result.csv")
+      write.csv(datasetInput()$df1, file = "raw-result.csv", row.names=FALSE)
+      write.csv(datasetInput()$df2, file = "clean-result.csv", row.names=FALSE)
       write.csv(datasetInput()$df3, file = "stat-result.csv")
-      write.csv(datasetInput()$df4, file = "mean-result.csv")
+      write.csv(datasetInput()$df4, file = "mean-result.csv", row.names=FALSE)
       print (fs)
       
       zip(zipfile=fname, files=fs)

@@ -50,6 +50,60 @@ server <- function(input, output) {
     contentType = "application/zip"
   )
   
+  #observe input for table output
+  observe({
+    data = input$fileUploaded
+    if(is.null(data))
+      return(NULL)
+
+    #--------------------------import-----------------------------------------
+    #get the filename
+    filename.long <- input$fileUploaded$name
+    #shortened filename without txt extension
+    filename.short <- str_sub(filename.long, end=-5)
+    #get the file datapath
+    filedatapath <- input$fileUploaded$datapath   
+    #read file in df
+    df.head <- (read_csv(file = filedatapath, skip = 28))[1,]
+    #create colnames
+    df.colnames <- colnames(df.head, do.NULL = TRUE, prefix = "col")
+    #read the the file
+    df <- read_csv(file = filedatapath, col_names =  df.colnames)
+    #get the index of each row which contains the word "Sample"
+    df.rowindex.newfile <- which(df$FID1=="Sample",arr.ind=T)
+    #--------------------------get info---------------------------------------
+    # subset to get the sample name
+    df.samplename <- df[(df.rowindex.newfile+1),1]
+    # subset to get the parameter file name
+    df.parname <- df[(df.rowindex.newfile+3),1]
+    # subset to get the name of the analyst
+    df.analyst <- df[(df.rowindex.newfile+13),1]
+    # subset to get the CalConst
+    df.CalConst <- df[(df.rowindex.newfile+17),1]
+    # subset to get the filter area
+    df.filterarea <- df[(df.rowindex.newfile+19),1]
+    #--------------------------combine to df for table-----------------------
+    #combine to df
+    df.table <- bind_cols(df.samplename,df.parname,df.analyst,df.CalConst,df.filterarea)
+    colnames(df.table) <- c("Sampe name", "Parameter file", "Analyst", "CalConst", "Area (sq cm)")
+    print(df.table)
+    #render table for output
+    output$infotable1 <- DT::renderDataTable({
+      DT::datatable( data = df.table,
+                     extensions = 'Buttons', 
+                     options = list(
+                       dom = 'Bfrtip',
+                       buttons = 
+                         list('copy', 'print', list(
+                           extend = 'collection',
+                           buttons = c('csv', 'excel', 'pdf'),
+                           text = 'Download'
+                         )),
+                       pageLength = -1
+                     )
+                  )
+    })
+  })
 }
 
 # ui.R
@@ -73,11 +127,19 @@ ui <- shinyUI(fluidPage(
       downloadButton("downloadData", "Split!"),
       
       # CSS style for the download button ----
-      tags$style(type='text/css', "#downloadFile { width:100%; margin-top: 35px;}")),
+      tags$style(type='text/css', "#downloadFile { width:100%; margin-top: 35px;}"),
+      
+      ),
     
-    # Main panel for displaying outputs ----
-    mainPanel()
-  )
+    
+    mainPanel(
+      tabsetPanel(
+        id = 'dataset',
+        tabPanel("File information", DT::dataTableOutput("infotable1"))
+      )
+    )
+  ),
+
 )
 )
 

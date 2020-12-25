@@ -7,7 +7,7 @@ fitting_type <<- "poly"                                     #poly, expo, or manu
 manual.coef = c(7645, -0.371, 5.32E-4)                    #enter manual coefficients if fitting_type manual is selected
 
 #enter a filename for the export files
-result_filename = "your filter name"   
+result_filename <<- input$fileUploadedOC$name   
 
 #set value for outlier removal (1.5*IQR recomended)
 IQR <- 1.5
@@ -50,7 +50,8 @@ for (i in filename){
 }
 
 #rm(list=setdiff(ls(), c("df","result_filename", "csv_raw", "csv_stat", "csv_mean")))
-df_raw$filter <- c(rep(result_filename, length(df_raw$tabla_resultados2.EC_yield)))
+#df_raw$filter <- c(rep(result_filename, length(df_raw$tabla_resultados2.EC_yield)))
+df_raw$filter <- result_filename
 colnames(df_raw) <- c("EC_yield", "charring_S1", "charring_S2", "charring_S3", "filter_name")
 
 #extract specific data--------------------------------------------------------------

@@ -14,7 +14,7 @@ ui <- dashboardPage(skin="blue",
       menuItem("OC calc", tabName = "oc_calc"),
       menuItem("Swiss 4S calc", tabName = "swiss4s_calc"),
       menuItem("OC/EC yield", tabName = "oc_ec_yield"),
-      menuItem("yield calc", tabName = "yield_calc"),
+      menuItem("Yield calc", tabName = "yield_calc"),
       menuItem("File splitter", tabName = "file_splitter"),
       menuItem("Readme", tabName = "Readme")
     )
@@ -48,7 +48,7 @@ ui <- dashboardPage(skin="blue",
               source("oc_ec_yield_app.R", local = TRUE)$value
       ),
       tabItem(tabName = "yield_calc",
-              h2("yield calc"),
+              h2("Yield calc"),
               p("Upload the OC Swiss3S protocol raw file(s) and click 'Calculate & Download'"),
               HTML('<style>.shiny-frame {width: 100%; height: calc(100vh - 80px)}</style>'),
               source("yield_calc_app.R", local = TRUE)$value
