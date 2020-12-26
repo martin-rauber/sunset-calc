@@ -92,12 +92,12 @@ df.amount <- NULL
 #loop function
 for (i in filename){
   data.load.func(i)
-  df.amount <- rbind(df.amount, data.frame(amount.S1, amount.S2, amount.S3,amount.S4,total.area,amount.tc))
+  df.amount <- rbind(df.amount, data.frame(amount.S1, amount.S2, amount.S3,amount.S4,amount.tc))
 }
 
 # combine file name with ouput data
 df.amount <- cbind(filename.text,df.amount)
-colnames(df.amount) <- c("sample name","S1 (ug C)","S2 (ug C)","S3 (ug C)","S4 (ug C)","total area", "total (ug C)")
+colnames(df.amount) <- c("sample name","S1 (ug C)","S2 (ug C)","S3 (ug C)","S4 (ug C)", "total (ug C)")
 df.amount
 
 
