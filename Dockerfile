@@ -23,7 +23,7 @@ RUN apt-get update && \
 
 # copy necessary files
 ## renv.lock file
-COPY /sunset-calc/renv.lock ./renv.lock
+COPY /R/renv.lock ./renv.lock
 
 # install renv & restore packages
 RUN Rscript -e 'install.packages("renv")'
@@ -31,7 +31,7 @@ RUN Rscript -e 'renv::consent(provided = TRUE)'
 RUN Rscript -e 'renv::restore()'
 
 ## app folder
-COPY /sunset-calc ./app
+COPY /R ./app
 
 # expose port
 EXPOSE 3838
