@@ -1,0 +1,1 @@
+Rscript -e 'library(methods); shiny::runApp("/Users/martinrauber/OneDrive/Uni Bern/R skript development/sunset-calc/sunset-calc/", launch.browser = TRUE, quiet = TRUE)' 

@@ -7,7 +7,7 @@ theme_set(theme_classic())
 
 ###
 ui <- dashboardPage(skin="blue",  
-    dashboardHeader(title = "Sunset calc"),
+    dashboardHeader(title = "Sunset calc", dropdownMenuOutput("messageMenu")),
   dashboardSidebar(
     sidebarMenu(
       menuItem("TC calc", tabName = "tc_calc"),
@@ -15,8 +15,7 @@ ui <- dashboardPage(skin="blue",
       menuItem("Swiss 4S calc", tabName = "swiss4s_calc"),
       menuItem("OC/EC yield", tabName = "oc_ec_yield"),
       menuItem("Yield calc", tabName = "yield_calc"),
-      menuItem("File splitter", tabName = "file_splitter"),
-      menuItem("Readme", tabName = "Readme")
+      menuItem("File splitter", tabName = "file_splitter")
     )
   ),
 
@@ -58,16 +57,39 @@ ui <- dashboardPage(skin="blue",
               p("Upload a Sunset raw file with multiple runs and click 'Split!' to split into single txt files"),
               HTML('<style>.shiny-frame {width: 100%; height: calc(100vh - 80px)}</style>'),
               source("file_splitter_app.R", local = TRUE)$value
-      ),
-      tabItem(tabName = "Readme",
-              includeMarkdown("readme.md")
-              
       )
+
     )
   )
 )
 
 server <- function(input,output,session){
+  
+  # message menu
+  icon_g <- icon("github")
+  icon_g[["attribs"]][["class"]] <- "fa fa-github"
+  output$messageMenu <- renderMenu({
+    dropdownMenu(type = "messages",
+                 messageItem(
+                   from = "Github",
+                   message = "Source",
+                  icon = icon_g,
+                   href = "https://github.com/martin-rauber/sunset-calc"),
+                 messageItem(
+                   from = "Readme",
+                   message = "Documentation",
+                   icon = icon("fas fa-graduation-cap"),
+                   href = "https://github.com/martin-rauber/sunset-calc#readme"),
+                 messageItem(
+                   from = "About",
+                   message = "Info, License",
+                   icon = icon("fas fa-question"),
+                   href = "https://github.com/martin-rauber/sunset-calc#about-sunset-calc"),
+                 badgeStatus = NULL,
+                 icon = icon("info-circle fa-lg"),
+                 headerText = "App Information"
+    )
+  })
   
 }
 shinyApp(ui,server)
