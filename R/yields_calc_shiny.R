@@ -118,10 +118,11 @@ stat_table <- ggtexttable(format(stat[c(9,4:6,8,12,13),], digits = 3),  theme = 
 #generate summary pdfs---------------------------------------------------------------
 
 #summary pdf page 1
-fig_summary_temp <- ggarrange( plot_fit, fig_EC_yield_charring_raw, fig_EC_yield_charring_wo_outliers, stat_table, nrow = 4, ncol = 1)
-fig_summary_temp <- annotate_figure(fig_summary_temp, top = text_grob(paste("\n","Summary:","\n","slope, EC-yield, charring, and statistics",sep=""), color = "black" , face = "bold", size = 16),)
-ggsave(filename = "yield-calc_summary1.pdf", plot = fig_summary_temp , width = 8.3, height = 11.7)
-
+fig_summary1_temp <- ggarrange( plot_fit, fig_EC_yield_charring_raw, fig_EC_yield_charring_wo_outliers, stat_table, nrow = 4, ncol = 1)
+fig_summary1_temp <- annotate_figure(fig_summary1_temp, top = text_grob(paste("\n","Summary:","\n","slope, EC-yield, charring, and statistics",sep=""), color = "black" , face = "bold", size = 16),)
+#save as pdf in tempdir
+tempPdf1 <- file.path(tempdir(), "yield-calc_summary1.pdf")
+ggsave(filename = tempPdf1, plot = fig_summary1_temp , width = 8.3, height = 11.7)
 #summary QQ-Plots-------------------------------------------------------------------
 
 #QQ-plots EC
@@ -137,11 +138,12 @@ plot_qq_S2_corr <- ggqqplot(df$charring_S2, ylab = "Charring S2")
 plot_qq_S3_raw <- ggqqplot(df_raw$charring_S3, ylab = "Charring S3")
 plot_qq_S3_corr <- ggqqplot(df$charring_S3, ylab = "Charring S3")
 
-#summary pdf page 2 
+#summary pdf page 2
 fig_summary2_temp <- ggarrange( plot_qq_EC_raw, plot_qq_EC_corr, plot_qq_S1_raw, plot_qq_S1_corr,plot_qq_S2_raw, plot_qq_S2_corr, plot_qq_S3_raw, plot_qq_S3_corr, nrow = 4, ncol = 2, align = "hv")
 fig_summary2_temp <- annotate_figure(fig_summary2_temp, top = text_grob(paste("\n","Outliers: QQ-Plots","\n",sep=""), color = "black" , face = "bold", size = 16),bottom = text_grob(paste("\n","Total number of filters: ",df_length_raw,"\n","Outliers removed: ",n_outlier_rows,"\n","Filters used for calculation: ", c(df_length_raw-n_outlier_rows),"\n", sep=""), color = "black" , face = "plain", size = 13),)
-ggsave(filename = "yield-calc_summary2.pdf", plot = fig_summary2_temp , width = 8.3, height = 11.7)
-
+#save as pdf in tempdir
+tempPdf2 <- file.path(tempdir(), "yield-calc_summary2.pdf")
+ggsave(filename = tempPdf2, plot = fig_summary2_temp , width = 8.3, height = 11.7)
 #end--------------------------------------------------------------------------------
 
 

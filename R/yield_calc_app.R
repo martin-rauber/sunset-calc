@@ -4,18 +4,19 @@ server <- function(input, output) {
   
   datasetInput <<- reactive({
     source("yields_calc_shiny.R", local = TRUE)
-    return(list(df1=df_raw, df2=df, df3=stat, df4=df_mean))
+    return(list(df1=df_raw, df2=df, df3=stat, df4=df_mean,tempPdf1=tempPdf1,tempPdf2=tempPdf2))
   })
   
   output$downloadData <- downloadHandler(
     filename = 'yield-calc-result.zip',
     content = function(fname) {
       
-      fs <- c("raw-result.csv", "clean-result.csv", "stat-result.csv", "mean-result.csv","yield-calc_summary1.pdf","yield-calc_summary2.pdf")
+      fs <- c("raw-result.csv", "clean-result.csv", "stat-result.csv", "mean-result.csv","yield-calc-summary.pdf")
       write.csv(datasetInput()$df1, file = "raw-result.csv", row.names=FALSE)
       write.csv(datasetInput()$df2, file = "clean-result.csv", row.names=FALSE)
       write.csv(datasetInput()$df3, file = "stat-result.csv")
       write.csv(datasetInput()$df4, file = "mean-result.csv", row.names=FALSE)
+      pdf_combine(c(datasetInput()$tempPdf1, datasetInput()$tempPdf2), output = "yield-calc-summary.pdf")
       print (fs)
       
       zip(zipfile=fname, files=fs)
