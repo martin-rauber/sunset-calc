@@ -85,7 +85,7 @@ filename.text <<- input$fileUploaded$name
 S1_length <- (110+as.numeric(input$inTextS1))
 S2_length <- (490+as.numeric(input$inTextS2))
 S3_length <- (690+as.numeric(input$inTextS3))
-S4_length <- (1050+as.numeric(input$inTextS4))
+S4_length <- (1080+as.numeric(input$inTextS4))
 
 #create an empty df
 df.amount <- NULL
