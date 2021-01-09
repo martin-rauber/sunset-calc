@@ -1,5 +1,30 @@
-# server.R
-
+library("shinythemes")
+#ui
+ui <- shinyUI(fluidPage(
+  setBackgroundColor("#ecf0f5"),
+  sidebarLayout(
+    sidebarPanel(
+      # Input: Select a file ----
+      fileInput("fileUploadedOC", "Drag & Drop File(s)",
+                multiple = TRUE,
+                accept = c("text/csv",
+                           "text/comma-separated-values,text/plain",
+                           ".csv")),
+      
+      
+      # Output: Download a file ----
+      downloadButton("downloadData", "Calculate & Download"),
+      
+      # CSS style for the download button ----
+      tags$style(type='text/css', "#downloadFile { width:100%; margin-top: 35px;}")),
+    
+    # Main panel for displaying outputs ----
+    mainPanel()
+    
+  )
+)
+)
+#server
 server <- function(input, output) {
   
   datasetInput <<- reactive({
@@ -35,33 +60,7 @@ server <- function(input, output) {
   
 }
 
-# ui.R
-library(shinythemes)
 
-ui <- shinyUI(fluidPage(
-  setBackgroundColor("#ecf0f5"),
-  sidebarLayout(
-    sidebarPanel(
-      # Input: Select a file ----
-      fileInput("fileUploadedOC", "Drag & Drop File(s)",
-                multiple = TRUE,
-                accept = c("text/csv",
-                           "text/comma-separated-values,text/plain",
-                           ".csv")),
-      
-      
-      # Output: Download a file ----
-      downloadButton("downloadData", "Calculate & Download"),
-      
-      # CSS style for the download button ----
-      tags$style(type='text/css', "#downloadFile { width:100%; margin-top: 35px;}")),
-    
-    # Main panel for displaying outputs ----
-    mainPanel()
-      
-    )
-  )
-)
 
 
 shinyApp(ui = ui, server = server)

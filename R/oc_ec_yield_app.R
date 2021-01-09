@@ -2,44 +2,7 @@ library("shinythemes")
 library("shinyWidgets")
 library("tidyverse")
 library("zip")
-
-# server.R
-server <- function(input, output) {
-  
-  datasetInput <- reactive({
-    
-    #run yields calc, oc-calc, and tc calc, then return the desired data
-    source("yields_calc_shiny.R", local = TRUE)
-    source("oc_calc_shiny.R", local = TRUE)
-    source("tc_calc_shiny.R", local = TRUE)
-    return(list(df.yield=df_raw, df.amount.oc=df.amount.oc, df.amount.tc=df.amount.tc))
-
-  })
-  
-  output$downloadData <- downloadHandler(
-    filename = 'oc-ec-yield-result.csv',
-    content = function(file) {
-      df.result <- cbind(datasetInput()$df.yield,datasetInput()$df.amount.oc,datasetInput()$df.amount.tc)
-      df.result$TCcalculated <- df.result[,10]+df.result[,12]
-      df.result$ECcorr <- df.result[,12]/df.result[,1]
-      df.result$OCcorr <- df.result[,10]-(df.result$ECcorr-df.result[,12])
-      df.result <- cbind(df.result[,6],df.result[,11],df.result[,1:4],df.result[,7:10],df.result[,12],df.result$TCcalculated,df.result$OCcorr,df.result$ECcorr)
-      colnames(df.result) <-  c("sample name OC","sample name TC","EC yield","charring S1","charring S2","charring S3","S1 (ug C)","S2 (ug C)", "S3 (ug C)","total OC (ug C)","EC (ug C)", "TC calculated (ug C)", "corr. OC (ug C)", "corr. EC (ug C)")
-      print(df.result)
-      write.csv(df.result, file, row.names=FALSE)
-      #remove temporary files form folder again
-      ##path csv and pdf
-      file.list.rem.pdf <- paste(getwd(), "/",list.files(getwd(), pattern = "*.pdf"), sep = "")
-      #removal
-      file.remove(file.list.rem.pdf)
-    }
-  )
-  
-  
-}
-
-# ui.R
-
+#ui
 ui <- shinyUI(fluidPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
@@ -78,6 +41,33 @@ ui <- shinyUI(fluidPage(
   )
 )
 )
+#server
+server <- function(input, output) {
+  
+  datasetInput <- reactive({
+    
+    #run yields calc, oc-calc, and tc calc, then return the desired data
+    source("yields_calc_shiny.R", local = TRUE)
+    source("oc_calc_shiny.R", local = TRUE)
+    source("tc_calc_shiny.R", local = TRUE)
+    return(list(df.yield=df_raw, df.amount.oc=df.amount.oc, df.amount.tc=df.amount.tc))
+
+  })
+  
+  output$downloadData <- downloadHandler(
+    filename = 'oc-ec-yield-result.csv',
+    content = function(file) {
+      df.result <- cbind(datasetInput()$df.yield,datasetInput()$df.amount.oc,datasetInput()$df.amount.tc)
+      df.result$TCcalculated <- df.result[,10]+df.result[,12]
+      df.result$ECcorr <- df.result[,12]/df.result[,1]
+      df.result$OCcorr <- df.result[,10]-(df.result$ECcorr-df.result[,12])
+      df.result <- cbind(df.result[,6],df.result[,11],df.result[,1:4],df.result[,7:10],df.result[,12],df.result$TCcalculated,df.result$OCcorr,df.result$ECcorr)
+      colnames(df.result) <-  c("sample name OC","sample name TC","EC yield","charring S1","charring S2","charring S3","S1 (ug C)","S2 (ug C)", "S3 (ug C)","total OC (ug C)","EC (ug C)", "TC calculated (ug C)", "corr. OC (ug C)", "corr. EC (ug C)")
+      print(df.result)
+      write.csv(df.result, file, row.names=FALSE)
+    }
+  )
+}
 
 shinyApp(ui = ui, server = server)
 

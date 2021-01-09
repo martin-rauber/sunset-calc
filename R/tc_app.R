@@ -1,4 +1,38 @@
-# server.R
+library("shinythemes")
+#ui
+ui <- shinyUI(fluidPage(
+  setBackgroundColor("#ecf0f5"),
+  sidebarLayout(
+    sidebarPanel(
+      # Input: Select a file ----
+      fileInput("fileUploadedTC", "Drag & Drop File(s)",
+                multiple = TRUE,
+                accept = c("text/csv",
+                           "text/comma-separated-values,text/plain",
+                           ".csv")),
+      
+      
+      # Output: Download a file ----
+      downloadButton("downloadData", "Calculate & Download"),
+      
+      # CSS style for the download button ----
+      tags$style(type='text/css', "#downloadFile { width:100%; margin-top: 35px;}")),
+    
+    # Main panel for displaying outputs ----
+    mainPanel(
+      # Output: Tabset with different plots
+      tabsetPanel(type = "tabs",
+                  tabPanel("NDIR", plotOutput('plots_ndir', width = "100%", height = "360px")),
+                  tabPanel("Temperature", plotOutput('plots_temperature',width = "100%", height = "360px")),
+                  tabPanel("Pressure", plotOutput('plots_pressure',width = "100%", height = "360px")),
+                  tabPanel("Laser", plotOutput('plots_laser',width = "100%", height = "360px"))
+      )
+      
+    )
+  )
+)
+)
+#server
 server <- function(input, output) {
   
   datasetInput <- reactive({
@@ -61,41 +95,7 @@ server <- function(input, output) {
   
 }
 
-# ui.R
-library(shinythemes)
 
-ui <- shinyUI(fluidPage(
-  setBackgroundColor("#ecf0f5"),
- sidebarLayout(
-    sidebarPanel(
-      # Input: Select a file ----
-      fileInput("fileUploadedTC", "Drag & Drop File(s)",
-                multiple = TRUE,
-                accept = c("text/csv",
-                           "text/comma-separated-values,text/plain",
-                           ".csv")),
-      
-      
-      # Output: Download a file ----
-      downloadButton("downloadData", "Calculate & Download"),
-      
-      # CSS style for the download button ----
-      tags$style(type='text/css', "#downloadFile { width:100%; margin-top: 35px;}")),
-    
-    # Main panel for displaying outputs ----
-    mainPanel(
-      # Output: Tabset with different plots
-      tabsetPanel(type = "tabs",
-                  tabPanel("NDIR", plotOutput('plots_ndir', width = "100%", height = "360px")),
-                  tabPanel("Temperature", plotOutput('plots_temperature',width = "100%", height = "360px")),
-                  tabPanel("Pressure", plotOutput('plots_pressure',width = "100%", height = "360px")),
-                  tabPanel("Laser", plotOutput('plots_laser',width = "100%", height = "360px"))
-      )
-      
-    )
-  )
-)
-)
 
 shinyApp(ui = ui, server = server)
 

@@ -4,8 +4,42 @@ library("tidyverse")
 library("readr")
 library("stringr")
 library("zip")
-
-# server.R
+#ui
+ui <- shinyUI(fluidPage(
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
+  ),
+  setBackgroundColor("#ecf0f5"),
+  sidebarLayout(
+    sidebarPanel(
+      # Input: Select a file ----
+      fileInput("fileUploaded", "Drag & Drop File(s)",
+                multiple = TRUE,
+                accept = c("text/csv",
+                           "text/comma-separated-values,text/plain",
+                           ".csv")),
+      
+      
+      # Output: Download a file ----
+      downloadButton("downloadData", "Split!"),
+      
+      # CSS style for the download button ----
+      tags$style(type='text/css', "#downloadFile { width:100%; margin-top: 35px;}"),
+      
+    ),
+    
+    
+    mainPanel(
+      tabsetPanel(
+        id = 'dataset',
+        tabPanel("File information", DT::dataTableOutput("infotable1"))
+      )
+    )
+  ),
+  
+)
+)
+#server
 server <- function(input, output) {
   
   datasetInput <- reactive({
@@ -106,42 +140,7 @@ server <- function(input, output) {
   })
 }
 
-# ui.R
 
-ui <- shinyUI(fluidPage(
-  tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
-  ),
-  setBackgroundColor("#ecf0f5"),
-  sidebarLayout(
-    sidebarPanel(
-      # Input: Select a file ----
-      fileInput("fileUploaded", "Drag & Drop File(s)",
-                multiple = TRUE,
-                accept = c("text/csv",
-                           "text/comma-separated-values,text/plain",
-                           ".csv")),
-      
-      
-      # Output: Download a file ----
-      downloadButton("downloadData", "Split!"),
-      
-      # CSS style for the download button ----
-      tags$style(type='text/css', "#downloadFile { width:100%; margin-top: 35px;}"),
-      
-      ),
-    
-    
-    mainPanel(
-      tabsetPanel(
-        id = 'dataset',
-        tabPanel("File information", DT::dataTableOutput("infotable1"))
-      )
-    )
-  ),
-
-)
-)
 
 shinyApp(ui = ui, server = server)
 
