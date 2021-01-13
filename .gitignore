@@ -1,9 +1,10 @@
-.RData
 .Ruserdata
 .DS_Store
 R/rsconnect/
 R/sunset-calc logo/
 R/sunset-calc.command
 R/.Rhistory
+R/.Rprofile
 R/.Rproj.user
+R/.RData
 .Rproj.user
