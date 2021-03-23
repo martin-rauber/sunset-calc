@@ -427,7 +427,7 @@ tabla_resultados<-data.frame("EC_yield"=c(EC_yield1,EC_yield2), "charring"=c(cha
 print(tabla_resultados)
 #write.table(tabla_resultados,"clipboard",sep="\t")
 
-tabla_resultados2<-data.frame("EC_yield_S1"=c(tabla_resultados[1,1]), "EC_yield_S2"=c(tabla_resultados[2,1]), "EC_yield_S3"=c(tabla_resultados[3,1]), "charring_S1"=c(tabla_resultados[1,2]), "charring_S2"=c(tabla_resultados[2,2]), "charring_S3"=c(tabla_resultados[3,2]), "charring_total"=c(tabla_resultados[1,2])+c(tabla_resultados[2,2])+c(tabla_resultados[3,2]))
+tabla_resultados2<-data.frame("EC_yield"=c(tabla_resultados[3,1]), "charringS1"=c(tabla_resultados[1,2]), "charringS2"=c(tabla_resultados[2,2]), "charringS3"=c(tabla_resultados[3,2]))
 #tabla_resultados2<-data.frame(tabla_resultados[3,1], tabla_resultados[1,2], tabla_resultados[2,2], tabla_resultados[3,2])
 print(tabla_resultados2)
 
