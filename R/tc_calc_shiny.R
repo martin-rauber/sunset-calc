@@ -60,12 +60,14 @@ filename.text <<- input$fileUploadedTC$name
 df.amount.tc <- NULL
 for (i in filename){
   data.load.func(i)
-  df.amount.tc <- rbind(df.amount.tc, data.frame(amount.tc))
+  input_data <- read.csv(file = i, sep = ",", col.names = paste0("C",seq_len(20)), fill = TRUE, header = T)
+  filter_area_tc = as.numeric(input_data[min(grep('FilterArea',input_data$C1))+1,1])
+  df.amount.tc <- rbind(df.amount.tc, data.frame(amount.tc, filter_area_tc)))
 }
 
 # combine file name with ouput data
 df.amount.tc <- cbind(filename.text,df.amount.tc)
-colnames(df.amount.tc) <- c("sample name","TC (ug C)")
+colnames(df.amount.tc) <- c("sample_name","TC_amount_ugC","filter_area_tc_cm2")
 df.amount.tc <<- df.amount.tc
 
 ##########################################################################
