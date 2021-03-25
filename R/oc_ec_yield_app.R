@@ -58,11 +58,11 @@ server <- function(input, output) {
     filename = 'oc-ec-yield-result.csv',
     content = function(file) {
       df.result <- cbind(datasetInput()$df.yield,datasetInput()$df.amount.oc,datasetInput()$df.amount.tc)
-      df.result$TCcalculated <- df.result[,14]+df.result[,16]
-      df.result$ECcorr <- df.result[,16]/df.result[,3]
-      df.result$OCcorr <- df.result[,14]-(df.result$ECcorr-df.result[,16])
+      df.result$TCcalculated <- df.result[,14]/df.result[,8]+df.result[,16]/df.result[,17]
+      df.result$ECcorr <- df.result[,16]/(df.result[,3]*df.result[,17])
+      df.result$OCcorr <- df.result[,14]/df.result[,8]-(df.result$ECcorr-df.result[,16]/df.result[,17])
       df.result <- cbind(df.result[,10],df.result[,15],df.result[,1:7],df.result[,11:14],df.result[,16],df.result$TCcalculated,df.result$OCcorr,df.result$ECcorr)
-      colnames(df.result) <-  c("sample name OC","sample name TC","EC yield S1","EC yield S2","EC yield S3","charring S1","charring S2","charring S3","charring total","S1 (ug C)","S2 (ug C)", "S3 (ug C)","total OC (ug C)","EC (ug C)", "TC calculated (ug C)", "corr. OC (ug C)", "corr. EC (ug C)")
+      colnames(df.result) <-  c("sample_name_OC","sample_name_TC","EC_yield_S1","EC_yield_S2","EC_yield_S3","charring_S1","charring_S2","charring_S3","charring_total","OC_amount_S1_ugC","OC_amount_S2_ugC", "OC_amount_S3_ugC","OC_amount_total_ugC","EC_amount_ugC", "TC_amount_calculated_ugCcm2", "OC_amount_corr_ugCcm2", "EC_amount_corr_ugCcm2")
       print(df.result)
       write.csv(df.result, file, row.names=FALSE)
     }
