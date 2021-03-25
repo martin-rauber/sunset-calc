@@ -47,14 +47,14 @@ df_raw <- NULL
 for (i in filename){
   data_load_func(i)
   input_data <- read.csv(file = i, sep = ",", col.names = paste0("C",seq_len(20)), fill = TRUE, header = T)
-  filter_area = as.numeric(input_data[min(grep('FilterArea',input_data$C1))+1,1])
-  df_raw <- rbind(df_raw, data.frame(tabla_resultados2$EC_yield_S1,tabla_resultados2$EC_yield_S2,tabla_resultados2$EC_yield_S3,tabla_resultados2$charring_S1,tabla_resultados2$charring_S2,tabla_resultados2$charring_S3,tabla_resultados2$charring_total,filter_area))
+  filter_area_oc = as.numeric(input_data[min(grep('FilterArea',input_data$C1))+1,1])
+  df_raw <- rbind(df_raw, data.frame(tabla_resultados2$EC_yield_S1,tabla_resultados2$EC_yield_S2,tabla_resultados2$EC_yield_S3,tabla_resultados2$charring_S1,tabla_resultados2$charring_S2,tabla_resultados2$charring_S3,tabla_resultados2$charring_total,filter_area_oc))
 }
 
 #rm(list=setdiff(ls(), c("df","result_filename", "csv_raw", "csv_stat", "csv_mean")))
 #df_raw$filter <- c(rep(result_filename, length(df_raw$tabla_resultados2.EC_yield_S1)))
 df_raw$filter <- result_filename
-colnames(df_raw) <- c("EC_yield_S1", "EC_yield_S2", "EC_yield_S3", "charring_S1", "charring_S2", "charring_S3", "charring_total", "filter_area_cm2", "filter_name")
+colnames(df_raw) <- c("EC_yield_S1", "EC_yield_S2", "EC_yield_S3", "charring_S1", "charring_S2", "charring_S3", "charring_total", "filter_area_oc_cm2", "filter_name")
 
 #extract specific data--------------------------------------------------------------
 df_length_raw <- length(df_raw$EC_yield_S1)
@@ -114,9 +114,9 @@ fig_EC_yield_charring_wo_outliers <- fig_EC_yield_charring_wo_outliers + theme(p
 fig_EC_yield_charring_wo_outliers <- annotate_figure(fig_EC_yield_charring_wo_outliers, top = text_grob("Outliers removed", color = "darkblue", face = "bold", size = 12))
 
 #stats table
-colnames(stat) <- c("EC-yield S1", "EC-yield S2", "EC-yield S3", "charring S1", "charring S2", "charring S3", "charring total", "filter_area_cm2")
+colnames(stat) <- c("EC-yield S1", "EC-yield S2", "EC-yield S3", "charring S1", "charring S2", "charring S3", "charring total", "filter_area_oc_cm2")
 stat_table <- ggtexttable(format(stat[c(9,4:6,8,12,13),c(1:7)], digits = 3),  theme = ttheme("blank", base_size=10))
-colnames(stat) <- c("EC_yield_S1", "EC_yield_S2", "EC_yield_S3", "charring_S1", "charring_S2", "charring_S3", "charring_total", "filter_area_cm2") #rename columns for csv-output
+colnames(stat) <- c("EC_yield_S1", "EC_yield_S2", "EC_yield_S3", "charring_S1", "charring_S2", "charring_S3", "charring_total", "filter_area_oc_cm2") #rename columns for csv-output
 
 #generate summary pdfs---------------------------------------------------------------
 
