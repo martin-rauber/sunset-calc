@@ -62,7 +62,7 @@ for (i in filename){
   data.load.func(i)
   input_data <- read.csv(file = i, sep = ",", col.names = paste0("C",seq_len(20)), fill = TRUE, header = T)
   filter_area_tc = as.numeric(input_data[min(grep('FilterArea',input_data$C1))+1,1])
-  df.amount.tc <- rbind(df.amount.tc, data.frame(amount.tc, filter_area_tc)))
+  df.amount.tc <- rbind(df.amount.tc, data.frame(amount.tc, filter_area_tc))
 }
 
 # combine file name with ouput data
