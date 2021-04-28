@@ -1,4 +1,3 @@
-<a href="https://zenodo.org/badge/latestdoi/313062610"><img src="https://zenodo.org/badge/313062610.svg" alt="DOI"></a>
 
 <h2 align="center">Sunset-calc</h2>
 
