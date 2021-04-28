@@ -1,4 +1,6 @@
 library("shinythemes")
+#library("shinyWidgets")
+library("shinyalert")
 #ui
 ui <- shinyUI(fluidPage(
   setBackgroundColor("#ecf0f5"),
@@ -11,6 +13,15 @@ ui <- shinyUI(fluidPage(
                            "text/comma-separated-values,text/plain",
                            ".csv")),
       
+      # Shinyalert for Input2 ----
+      useShinyalert(),
+      
+      # Input2: Select a file ----
+      fileInput("fileUploadedCooldown", "OPTION: Drag & Drop TC, EC, or Swiss_4S file for cooldown",
+                multiple = FALSE,
+                accept = c("text/csv",
+                           "text/comma-separated-values,text/plain",
+                           ".csv")),
       
       # Output: Download a file ----
       downloadButton("downloadData", "Calculate & Download"),
@@ -53,14 +64,36 @@ server <- function(input, output) {
       #removal
       file.remove(file.list.rem.csv)
       file.remove(file.list.rem.pdf)
-
+      
     },
     contentType = "application/zip"
   )
   
+  #observe input
+  observe({
+    if(length(c(input$fileUploadedCooldown$name))>1) {
+      shinyalert(
+        title = "Oops!",
+        text = "Please upload only one file",
+        size = "s",
+        closeOnEsc = TRUE,
+        closeOnClickOutside = TRUE,
+        html = TRUE,
+        type = "warning",
+        showConfirmButton = TRUE,
+        showCancelButton = FALSE,
+        confirmButtonText = "OK",
+        confirmButtonCol = "#3c8dbc",
+        timer = 0,
+        imageUrl = "",
+        animation = TRUE
+      )
+    }else{
+      return(NULL)
+    }
+  })
+  
 }
-
-
 
 
 shinyApp(ui = ui, server = server)

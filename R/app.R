@@ -19,6 +19,7 @@ ui <- dashboardPage(skin="blue",
                     ),
                     
                     dashboardBody(
+                      tags$head(tags$link(rel = "shortcut icon", href = "icon.ico")),
                       tabItems(
                         tabItem(tabName = "tc_calc",
                                 h2("TC calc"),

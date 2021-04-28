@@ -32,15 +32,19 @@ library("stringr")
 
 #load function----------------------------------------------------------------------
 data_load_func = function(filename) {
-  cooldown = read.csv("cooldown_data.csv", sep = ",", header = T)
+  if (is.null(input$fileUploadedCooldown)) {
+    cooldown = read.csv("cooldown_data.csv", sep = ",", header = T)
+  } else {
+    cooldown <- read.csv(input$fileUploadedCooldown$datapath, sep = ",", skip = 28, header = T)
+    cooldown <- cooldown[,c(1:18)]
+    cooldown <- tail(cooldown,340)
+  }
   dat = as.data.frame(read.csv(file = filename, sep = ",", skip = 28, header = T ))[,c(1:18)]
   tabla_complete <<- rbind(dat, cooldown)
   yield_calc = function(tabla_complete, fitting_type, manual.coef) {source("yields_calc_ext.R")}
   yield_calc(tabla_complete)
-  
 } 
 
-#
 #load data, run calculation --------------------------------------------------------
 filename <<- input$fileUploadedOC$datapath
 df_raw <- NULL
@@ -51,8 +55,6 @@ for (i in filename){
   df_raw <- rbind(df_raw, data.frame(tabla_resultados2$EC_yield_S1,tabla_resultados2$EC_yield_S2,tabla_resultados2$EC_yield_S3,tabla_resultados2$charring_S1,tabla_resultados2$charring_S2,tabla_resultados2$charring_S3,tabla_resultados2$charring_total,filter_area_oc))
 }
 
-#rm(list=setdiff(ls(), c("df","result_filename", "csv_raw", "csv_stat", "csv_mean")))
-#df_raw$filter <- c(rep(result_filename, length(df_raw$tabla_resultados2.EC_yield_S1)))
 df_raw$filter <- result_filename
 colnames(df_raw) <- c("EC_yield_S1", "EC_yield_S2", "EC_yield_S3", "charring_S1", "charring_S2", "charring_S3", "charring_total", "filter_area_oc_cm2", "filter_name")
 
