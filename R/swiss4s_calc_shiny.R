@@ -97,7 +97,7 @@ for (i in filename){
 
 # combine file name with ouput data
 df.amount <- cbind(filename.text,df.amount)
-colnames(df.amount) <- c("sample name","S1 (ug C)","S2 (ug C)","S3 (ug C)","S4 (ug C)", "total (ug C)")
+colnames(df.amount) <- c("sample_name","OC_amount_S1_ugC","OC_amount_S2_ugC","OC_amount_S3_ugC","EC_amount_S4_ugC", "TC_amount_ugC")
 df.amount
 
 
