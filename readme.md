@@ -5,21 +5,21 @@
 
 ## Overview
 
-<img src="./R/sunset-calc-logo/sunset-calc-logo.png" width="170" align="right"/>
+<img src="R/sunset-calc-logo/sunset-calc-logo.png" width="170" align="right"/>
 
-Sunset-calc is a [R shiny app](https://shiny.rstudio.com) to calculate the amount of carbon for TC, Swiss_3S, and Swiss4S protocols from raw files recorded using a commercial thermo-optical OC/EC analyser (Model 5L, [Sunset Laboratory Inc.](https://www.sunlab.com), OR, United States). Be aware that this app only works with the designated Sunset protocols and does not take the given filter area into account. You can upload one or multiple files, however, **each file must contain only one Sunset run**. If you have multiple runs in a single txt file, please use the 'file splitter' first.
+Sunset-calc is a [R shiny app](https://shiny.rstudio.com) to calculate the amount of carbon for TC, Swiss_3S, and Swiss4S protocols from raw files recorded using a commercial thermo-optical OC/EC analyser (Model 5L, [Sunset Laboratory Inc.](https://www.sunlab.com), OR, United States). You can also calculate the EC recovery after WINSOC removal (EC yield) with the Swiss_3S protocol. The 'OC/EC yield' gives you all the amounts, yield, and charring for OC and EC. You can upload one or multiple files, however, **each file must contain only one Sunset run**. If you have multiple runs in a single txt file, please use the 'file splitter' first.
 
 ## TC calc
 
 Program to calculate TC for TC files. You get a .zip file containing a .csv file with the amount of carbon (µg C) for each step and the total carbon as well as the name of the sample corresponding to the input file name. If you compare the OC calc result to a result calculated by another software, be aware of the filter area that you used.
 
-![TC calc demo](./demo/tc-calc-demo.gif)
+![TC calc demo](demo/tc-calc-demo.gif)
 
 ## OC calc
 
 Program to calculate S1, S2, and S3 OC and total for Sunset OC-removal (Swiss_3S) files. See [Zhang et al., 2012](https://doi.org/10.5194/acp-12-10841-2012) for details. If you use a modified protocol, you need to adjust the set time in seconds for each modified step. Please do not adjust the times if you don't know what you are doing. When you reload the app, the times will go back to the default value, which corresponds to the standard Swiss_3S. You get a .zip file containing a .csv file with the amount of carbon (µg C) for each step and the total carbon as well as the name of the sample corresponding to the input file name. If you compare the OC calc result to a result calculated by another software, be aware of the filter area that you used.
 
-![OC calc demo](./demo/oc-calc-demo.gif)
+![OC calc demo](demo/oc-calc-demo.gif)
 
 ## Swiss 4S calc
 
