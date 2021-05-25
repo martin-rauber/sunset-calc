@@ -125,7 +125,7 @@ server <- function(input, output) {
   })
   
   output$downloadData <- downloadHandler(
-    filename = 'OC_amount_calculation_result.csv',
+    filename = paste('OC_amount_calculation_result_',system("git rev-parse --short HEAD", intern=TRUE),".csv",sep=""),
     content = function(file) {
       write.csv(datasetInput()$df.amount, file, row.names=FALSE)
     }

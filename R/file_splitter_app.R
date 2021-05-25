@@ -46,7 +46,7 @@ server <- function(input, output) {
   })
   
   output$downloadData <- downloadHandler(
-    filename = 'file_splitter_result.zip',
+    filename = paste('file_splitter_result_',system("git rev-parse --short HEAD", intern=TRUE),".zip",sep=""),
     content = function(fname) {
       #--------------------------import-----------------------------------------
       #get the filename

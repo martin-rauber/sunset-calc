@@ -44,7 +44,7 @@ server <- function(input, output) {
   })
   
   output$downloadData <- downloadHandler(
-    filename = 'yield-calc-result.zip',
+    filename = paste('yield-calc-result_',system("git rev-parse --short HEAD", intern=TRUE),".zip",sep=""),
     content = function(fname) {
       
       fs <- c("raw-result.csv", "clean-result.csv", "stat-result.csv", "mean-result.csv","yield-calc-summary.pdf")

@@ -55,7 +55,7 @@ server <- function(input, output) {
   })
   
   output$downloadData <- downloadHandler(
-    filename = 'oc-ec-yield-result.csv',
+    filename = paste('oc-ec-yield-result_',system("git rev-parse --short HEAD", intern=TRUE),".csv",sep=""),
     content = function(file) {
       df.result <- cbind(datasetInput()$df.yield,datasetInput()$df.amount.oc,datasetInput()$df.amount.tc)
       df.result$TCcalculated <- df.result[,14]/df.result[,8]+df.result[,16]/df.result[,17]
