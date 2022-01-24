@@ -10,8 +10,12 @@ ui <- shinyUI(fluidPage(
     tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
   ),
   setBackgroundColor("#ecf0f5"),
+  titlePanel(h2("File splitter",
+                h5("Upload a Sunset raw file with multiple runs and click 'Split!' to split into single txt files"))),
   sidebarLayout(
     sidebarPanel(
+      # Spinner to notify user when task takes more than 300ms
+      add_busy_spinner(spin = "fading-circle", color = "#3C8DBC", timeout = 300, position = "top-right"),
       # Input: Select a file ----
       fileInput("fileUploaded", "Drag & Drop File(s)",
                 multiple = TRUE,

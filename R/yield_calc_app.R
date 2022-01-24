@@ -1,11 +1,14 @@
 library("shinythemes")
-#library("shinyWidgets")
 library("shinyalert")
 #ui
 ui <- shinyUI(fluidPage(
   setBackgroundColor("#ecf0f5"),
+  titlePanel(h2("Yield calc",
+                h5("Upload the OC Swiss3S protocol raw file(s) and click 'Calculate & Download'"))),
   sidebarLayout(
     sidebarPanel(
+      # Spinner to notify user when task takes more than 300ms
+      add_busy_spinner(spin = "fading-circle", color = "#3C8DBC", timeout = 300, position = "top-right"),
       # Input: Select a file ----
       fileInput("fileUploadedOC", "Drag & Drop File(s)",
                 multiple = TRUE,
@@ -28,7 +31,7 @@ ui <- shinyUI(fluidPage(
       
       # CSS style for the download button ----
       tags$style(type='text/css', "#downloadFile { width:100%; margin-top: 35px;}")),
-    
+
     # Main panel for displaying outputs ----
     mainPanel()
     

@@ -2,8 +2,12 @@ library("shinythemes")
 #ui
 ui <- shinyUI(fluidPage(
   setBackgroundColor("#ecf0f5"),
+  titlePanel(h2("TC calc",
+                h5("Upload the TC protocol raw file(s) and click 'Calculate & Download'"))),
   sidebarLayout(
     sidebarPanel(
+      # Spinner to notify user when task takes more than 300ms
+      add_busy_spinner(spin = "fading-circle", color = "#3C8DBC", timeout = 300, position = "top-right"),
       # Input: Select a file ----
       fileInput("fileUploadedTC", "Drag & Drop File(s)",
                 multiple = TRUE,
@@ -25,7 +29,7 @@ ui <- shinyUI(fluidPage(
                   tabPanel("NDIR", plotOutput('plots_ndir', width = "100%", height = "360px")),
                   tabPanel("Temperature", plotOutput('plots_temperature',width = "100%", height = "360px")),
                   tabPanel("Pressure", plotOutput('plots_pressure',width = "100%", height = "360px")),
-                  tabPanel("Laser", plotOutput('plots_laser',width = "100%", height = "360px"))
+                  tabPanel("Laser transmission", plotOutput('plots_laser',width = "100%", height = "360px"))
       )
       
     )

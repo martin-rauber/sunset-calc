@@ -8,8 +8,12 @@ ui <- shinyUI(fluidPage(
     tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
   ),
   setBackgroundColor("#ecf0f5"),
+  titlePanel(h2("OC/EC yield",
+                h5("Upload the OC Swiss3S and EC (TC) protocol raw file(s) and click 'Calculate & Download'"))),
   sidebarLayout(
     sidebarPanel(
+      # Spinner to notify user when task takes more than 300ms
+      add_busy_spinner(spin = "fading-circle", color = "#3C8DBC", timeout = 300, position = "top-right"),
       # Input: OC ----
       fileInput("fileUploadedOC", "Drag & Drop OC File(s)",
                 multiple = TRUE,

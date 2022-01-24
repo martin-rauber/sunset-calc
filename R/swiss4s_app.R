@@ -11,8 +11,12 @@ ui <- shinyUI(fluidPage(
     tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
   ),
   setBackgroundColor("#ecf0f5"),
+  titlePanel(h2("Swiss 4S calc",
+                h5("Upload the Swiss_4S protocol raw file(s) and click 'Calculate & Download'"))),
   sidebarLayout(
     sidebarPanel(
+      # Spinner to notify user when task takes more than 300ms
+      add_busy_spinner(spin = "fading-circle", color = "#3C8DBC", timeout = 300, position = "top-right"),
       # Input: Select a file ----
       fileInput("fileUploaded", "Drag & Drop File(s)",
                 multiple = TRUE,
@@ -38,7 +42,8 @@ ui <- shinyUI(fluidPage(
                   tabPanel("NDIR", plotOutput('plots_ndir', width = "100%", height = "360px")),
                   tabPanel("Temperature", plotOutput('plots_temperature',width = "100%", height = "360px")),
                   tabPanel("Pressure", plotOutput('plots_pressure',width = "100%", height = "360px")),
-                  tabPanel("Laser", plotOutput('plots_laser',width = "100%", height = "360px"))
+                  tabPanel("Laser transmission", plotOutput('plots_laser',width = "100%", height = "360px")),
+                  tabPanel("Laser attenuation", plotOutput('plots_laserATN',width = "100%", height = "360px"))
       )
     )
   )
@@ -63,6 +68,7 @@ server <- function(input, output) {
     df_lenght <-  length((as.data.frame(read.csv(file = data$datapath[1], sep = ",", skip = 28, header = T )))$CO2_ppm)
     df$time_s <- rep(seq(1:df_lenght),length(data$name))
     df$file_name <- rep(data$name,each=df_lenght)
+    df$laserATN <- -100*log(df$laserTrans/max(df$laserTrans))
     S1_length <- (110+as.numeric(input$inTextS1))
     S2_length <- (490+as.numeric(input$inTextS2))
     S3_length <- (690+as.numeric(input$inTextS3))
@@ -129,6 +135,21 @@ server <- function(input, output) {
         annotate("text", x = S1_length+(S2_length-S1_length)*0.5,hjust = 0.5, y = max(df$laserTrans)+0.05*max(df$laserTrans), label = "S2")+
         annotate("text", x = S2_length+(S3_length-S2_length)*0.5,hjust = 0.5, y = max(df$laserTrans)+0.05*max(df$laserTrans), label = "S3")+
         annotate("text", x = S3_length+(S4_length-S3_length)*0.5,hjust = 0.5, y = max(df$laserTrans)+0.05*max(df$laserTrans), label = "S4")+
+        geom_point()
+    })
+    output$plots_laserATN = renderPlot({
+      ggplot(df, aes(x = time_s, y = laserATN,colour = file_name)) +
+        theme(legend.position="right", legend.box="horizontal", legend.margin=margin(), legend.title = element_blank())+
+        ylab("laser attenuation (A.U.)") +
+        xlab("time (s)") +
+        annotate("rect", xmin = 50, xmax = S1_length, ymin = 0, ymax = max(df$laserATN)+0.1*max(df$laserATN), fill = "red", color ="NA", alpha = .1)+
+        annotate("rect", xmin = S1_length, xmax = S2_length, ymin = 0, ymax = max(df$laserATN)+0.1*max(df$laserATN), fill = "green", color ="NA", alpha = .1)+
+        annotate("rect", xmin = S2_length, xmax = S3_length, ymin = 0, ymax = max(df$laserATN)+0.1*max(df$laserATN), fill = "blue", color ="NA", alpha = .1)+
+        annotate("rect", xmin = S3_length,xmax = S4_length, ymin = 0, ymax = max(df$laserATN)+0.1*max(df$laserATN), fill = "yellow", color ="NA", alpha = .1)+
+        annotate("text", x = (50+S1_length)*0.5,hjust = 0.5,  y = max(df$laserATN)+0.05*max(df$laserATN),  label = "S1")+
+        annotate("text", x = S1_length+(S2_length-S1_length)*0.5,hjust = 0.5, y = max(df$laserATN)+0.05*max(df$laserATN), label = "S2")+
+        annotate("text", x = S2_length+(S3_length-S2_length)*0.5,hjust = 0.5, y = max(df$laserATN)+0.05*max(df$laserATN), label = "S3")+
+        annotate("text", x = S3_length+(S4_length-S3_length)*0.5,hjust = 0.5, y = max(df$laserATN)+0.05*max(df$laserATN), label = "S4")+
         geom_point()
     })
   })
