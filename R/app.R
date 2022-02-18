@@ -15,7 +15,8 @@ ui <- dashboardPage(skin="blue",
                         menuItem("Swiss 4S calc", tabName = "swiss4s_calc"),
                         menuItem("OC/EC yield", tabName = "oc_ec_yield"),
                         menuItem("Yield calc", tabName = "yield_calc"),
-                        menuItem("File splitter", tabName = "file_splitter")
+                        menuItem("File splitter", tabName = "file_splitter"),
+                        menuItem("", tabName = "arcade")
                       )
                     ),
                     
@@ -44,22 +45,29 @@ ui <- dashboardPage(skin="blue",
                         tabItem(tabName = "file_splitter",
                                 HTML('<style>.shiny-frame {width: 100%; height: calc(100vh - 80px)}</style>'),
                                 source("file_splitter_app.R", local = TRUE)$value
+                        ),
+                        tabItem(tabName = "arcade",
+                                htmlOutput("frame")
                         )
                         
                       )
                     )
 )
 
+addResourcePath("tmpuser", getwd())
 #server
 server <- function(input,output,session){
-  
+  output$frame <- renderUI({
+    tags$iframe(frameBorder="0", src= "tmpuser/sunset-calc-logo/connect4.html",
+                style='width:100%;height:calc(100vh - 80px);'
+    ) })
   # message menu
   icon_g <- icon("github")
   icon_g[["attribs"]][["class"]] <- "fa fa-github"
   output$messageMenu <- renderMenu({
     dropdownMenu(type = "messages",
                  messageItem(
-                   from = "Github",
+                   from = "GitHub",
                    message = "Source",
                    icon = icon_g,
                    href = "https://github.com/martin-rauber/sunset-calc"),

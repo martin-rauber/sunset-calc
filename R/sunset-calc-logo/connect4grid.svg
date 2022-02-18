@@ -1,0 +1,27 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+ 
+<svg width="700" height="600" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ 
+ <g stroke="grey" >
+ 
+  <line x1="0" y1="100" x2="700" y2="100" stroke-width="1" />
+  <line x1="0" y1="200" x2="700" y2="200" stroke-width="1" />
+  <line x1="0" y1="300" x2="700" y2="300" stroke-width="1" />
+  <line x1="0" y1="400" x2="700" y2="400" stroke-width="1" />
+  <line x1="0" y1="500" x2="700" y2="500" stroke-width="1" />
+  <line x1="0" y1="600" x2="700" y2="600" stroke-width="1" />
+  <line x1="0" y1="700" x2="700" y2="700" stroke-width="1" />
+  
+ 
+  <line x1="0" y1="0" x2="0" y2="600" stroke-width="1" />
+  <line x1="100" y1="0" x2="100" y2="600" stroke-width="1" />
+  <line x1="200" y1="0" x2="200" y2="600" stroke-width="1" />
+  <line x1="300" y1="0" x2="300" y2="600" stroke-width="1" />
+  <line x1="400" y1="0" x2="400" y2="600" stroke-width="1" />
+  <line x1="500" y1="0" x2="500" y2="600" stroke-width="1" />
+  <line x1="600" y1="0" x2="600" y2="600" stroke-width="1" />
+    <line x1="700" y1="0" x2="700" y2="600" stroke-width="1" />
+
+ </g>
+</svg>
