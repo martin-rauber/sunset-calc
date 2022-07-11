@@ -16,6 +16,7 @@ ui <- dashboardPage(skin="blue",
                         menuItem("OC/EC yield", tabName = "oc_ec_yield"),
                         menuItem("Yield calc", tabName = "yield_calc"),
                         menuItem("File splitter", tabName = "file_splitter"),
+                        menuItem("4S/3S converter", tabName = "4s_3s_converter"),
                         menuItem("", tabName = "arcade")
                       )
                     ),
@@ -45,6 +46,10 @@ ui <- dashboardPage(skin="blue",
                         tabItem(tabName = "file_splitter",
                                 HTML('<style>.shiny-frame {width: 100%; height: calc(100vh - 80px)}</style>'),
                                 source("file_splitter_app.R", local = TRUE)$value
+                        ),
+                        tabItem(tabName = "4s_3s_converter",
+                                HTML('<style>.shiny-frame {width: 100%; height: calc(100vh - 80px)}</style>'),
+                                source("4s_3s_converter_app.R", local = TRUE)$value
                         ),
                         tabItem(tabName = "arcade",
                                 htmlOutput("frame")
