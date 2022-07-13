@@ -33,11 +33,7 @@ ui <- shinyUI(fluidPage(
     ),
     
     
-    mainPanel(
-      tabsetPanel(
-        id = 'dataset',
-      )
-    )
+    mainPanel()
   ),
   
 )
@@ -67,7 +63,7 @@ server <- function(input, output) {
           input_data4S <- read.csv(file = i, skip=28, sep = ",", header = T )
           df.colnames <- colnames(input_data4S, do.NULL = TRUE, prefix = "col")
           input_data4S <- read_csv(file = i, col_names =  df.colnames)
-        }
+        } 
         #remove last step of 4S protocol
         ConvertedTo3SOutput <- head(input_data4S,-340)
         write.csv(ConvertedTo3SOutput, row.names=FALSE, quote=FALSE, file = paste0(str_sub(filename[j], end=-5), "-converted",".txt"))
@@ -84,13 +80,6 @@ server <- function(input, output) {
     contentType = "application/zip"
   )
 
-  #observe input for table output
-  observe({
-    data = input$fileUploaded
-    if(is.null(data))
-      return(NULL)
-
-  })
 }
 
 

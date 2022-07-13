@@ -49,7 +49,7 @@ ui <- dashboardPage(skin="blue",
                         ),
                         tabItem(tabName = "4s_3s_converter",
                                 HTML('<style>.shiny-frame {width: 100%; height: calc(100vh - 80px)}</style>'),
-                                source("4s_3s_converter_app.R", local = TRUE)$value
+                                source("converter_4s_3s_app.R", local = TRUE)$value
                         ),
                         tabItem(tabName = "arcade",
                                 htmlOutput("frame")
