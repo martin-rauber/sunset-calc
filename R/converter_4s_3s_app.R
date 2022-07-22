@@ -1,3 +1,5 @@
+#the 4S/3S converter was added by Jan Straehl
+
 library("shinythemes")
 library("shinyWidgets")
 library("tidyverse")
@@ -10,7 +12,7 @@ ui <- shinyUI(fluidPage(
     tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
   ),
   setBackgroundColor("#ecf0f5"),
-  titlePanel(h2("4S/3S Converter",
+  titlePanel(h2("4S/3S converter",
                 h5("Upload the Swiss_4S protocol raw file(s) and click 'Convert!'"))),
   sidebarLayout(
     sidebarPanel(
