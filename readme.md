@@ -54,7 +54,7 @@ The file splitter splits a Sunset txt raw file with multiple runs in one to mult
 
 ### 4S/3S converter
 
-The 4S/3S converter converts Sunset txt raw files from Swiss_4S runs to files with three steps only. This means, data recorded during the last step of the Swiss_4s protocol are deleted. Therefore, the output files of the 4S/3S converter are equivalent to Sunset txt raw files recorded during a Swiss_3S run and can be treated analogously with the programs 'OC calc', 'OC/EC yield' and 'Yield calc'. Output txt file nomenclature: [file name]-converted.txt <br />
+The 4S/3S converter converts Sunset txt raw files from Swiss_4S runs to files with three steps only. This means, data recorded during the last step of the Swiss_4S protocol are deleted. Therefore, the output files of the 4S/3S converter are equivalent to Sunset txt raw files recorded during a Swiss_3S run and can be treated analogously with the programs 'OC calc', 'OC/EC yield' and 'Yield calc'. Output txt file nomenclature: [file name]-converted.txt <br />
 The 4S/3S converter accepts splitted files only. Multiple runs can be uploaded and converted simultaneously. The output is provided in a zip file containing a txt file for each run.
 
 
