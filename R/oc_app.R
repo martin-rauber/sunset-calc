@@ -67,8 +67,8 @@ server <- function(input, output) {
     df$time_s <- rep(seq(1:df_lenght),length(data$name))
     df$file_name <- rep(data$name,each=df_lenght)
     S1_length <- (110+as.numeric(input$inTextS1))
-    S2_length <- (490+as.numeric(input$inTextS2))
-    S3_length <- (690+as.numeric(input$inTextS3))
+    S2_length <- (140+S1_length+as.numeric(input$inTextS2))
+    S3_length <- (80+S2_length+as.numeric(input$inTextS3))
     #plot output
     output$plots_ndir = renderPlot({
       ggplot(df, aes(x = time_s, y = CO2_ppm,colour = file_name)) +

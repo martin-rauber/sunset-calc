@@ -83,9 +83,9 @@ filename <- input$fileUploaded$datapath
 filename.text <<- input$fileUploaded$name
 #length of 
 S1_length <- (110+as.numeric(input$inTextS1))
-S2_length <- (490+as.numeric(input$inTextS2))
-S3_length <- (690+as.numeric(input$inTextS3))
-S4_length <- (1080+as.numeric(input$inTextS4))
+S2_length <- (140+S1_length+as.numeric(input$inTextS2))
+S3_length <- (80+S2_length+as.numeric(input$inTextS3))
+S4_length <- (30+S3_length+as.numeric(input$inTextS4))
 
 #create an empty df
 df.amount <- NULL
